@@ -23,6 +23,24 @@ which will render something like:
 
 ![Example chart](graph.png)
 
+## Run locally
+
+You can start the Docker image directly:
+```bash
+docker run -p 8080:8080 -ghcr.io/pvcnt/byblos/byblos
+```
+
+If you need to customise the configuration, you can pass an additional configuration file as an extra argument, e.g.:
+```bash
+docker run -p 8080:8080 -v $PWD/custom.conf:/custom.conf ghcr.io/pvcnt/byblos/byblos /custom.conf
+```
+
+This file can be used for example to customise the Prometheus instance to connect to:
+```
+byblos.eval.db {
+    endpoint = "https://my.prometheus.instance"
+}
+```
 
 ## License
 
