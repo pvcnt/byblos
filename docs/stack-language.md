@@ -47,6 +47,7 @@ This section explain words that are defined in the stack language.
 ### query
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `String,:query` | `TimeSeriesExpr` |
 
 Generate a time series that is the result of PromQL expression.
@@ -54,6 +55,7 @@ Generate a time series that is the result of PromQL expression.
 ### const
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `Float,:const` | `TimeSeriesExpr` |
 
 Generate a line where each datapoint is a constant value.
@@ -61,13 +63,15 @@ Generate a line where each datapoint is a constant value.
 ### clear
 
 | Input stack | Output stack |
-| `...,:clear` | `` |
+|-------------|--------------|
+| `...,:clear` | <empty> |
 
 Remove all items from the stack.
 
 ### dup
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `Any,:clear` | `Any,Any` |
 
 Duplicate the item on the top of the stack.
@@ -75,13 +79,15 @@ Duplicate the item on the top of the stack.
 ### drop
 
 | Input stack | Output stack |
-| `Any,:clear` | `` |
+|-------------|--------------|
+| `Any,:clear` | <empty> |
 
 Remove the item on the top of the stack.
 
 ### get
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `String,:get` | `Any` |
 
 Get the value of a variable and push it on the stack.
@@ -89,13 +95,15 @@ Get the value of a variable and push it on the stack.
 ### set
 
 | Input stack | Output stack |
-| `String,Any,:set` | `` |
+|-------------|--------------|
+| `String,Any,:set` | <empty> |
 
 Set the value of a variable.
 
 ### alpha
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,String,:alpha` | `StyleExpr` |
 
 Set the alpha value for the colors on the line.
@@ -105,6 +113,7 @@ This setting will be ignored if the [color](#color) setting is used for the same
 ### color
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,String,:color` | `StyleExpr` |
 
 Set the color for the line.
@@ -117,6 +126,7 @@ The value should be one of:
 ### palette
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,String,:palette` | `StyleExpr` |
 
 Set the palette to use for the results of an expression.
@@ -125,6 +135,7 @@ This operator is allows for scoping a palette to a particular query instead of t
 ### ls
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,String,:ls` | `StyleExpr` |
 
 Set the line style.
@@ -138,6 +149,7 @@ The value should be one of:
 ### lw
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,Integer,:lw` | `StyleExpr` |
 
 The width of the stroke used when drawing the line.
@@ -145,6 +157,7 @@ The width of the stroke used when drawing the line.
 ### legend
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,String,:legend` | `StyleExpr` |
 
 Set the legend text.
@@ -156,6 +169,7 @@ If a variable is not defined, then the name of the variable will be used as the 
 ### axis
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,Integer,:axis` | `StyleExpr` |
 
 Specify which Y-axis to use for the line. The value specified is the axis number and should be an integer in the range 0 to 4 inclusive.
@@ -163,6 +177,7 @@ Specify which Y-axis to use for the line. The value specified is the axis number
 ### limit
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,Integer,:limit` | `StyleExpr` |
 
 Restrict the output to the first specified number of lines from the input expression.
@@ -171,6 +186,7 @@ The lines will be chosen in order based on the [sort](#sort) and [order](#order)
 ### sort
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,String,:sort` | `StyleExpr` |
 
 Sort the results of an expression in the legend by one of the summary statistics or by the legend text.
@@ -181,9 +197,18 @@ This will sort in ascending order by default, for descending order use [order](#
 ### order
 
 | Input stack | Output stack |
+|-------------|--------------|
 | `TimeSeriesExpr,String,:order` | `StyleExpr` |
 
 Order to use for [sorting](#sort) results.
 Supported values are `asc` and `desc` for ascending and descending order respectively.
 Default is `asc`.
 
+## Variables
+
+Variables can be used to store and retrieve any item in the stack.
+The following table contains a list of well-known variables:
+
+| Name | Description |
+|------|-------------|
+| `tz` | Timezone to use |
