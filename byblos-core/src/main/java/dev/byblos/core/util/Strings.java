@@ -212,22 +212,6 @@ public final class Strings {
     }
 
     /**
-     * Returns the name of the reference point for relative dates. For example, with the
-     * relative date `now-5m`, it would return `now`.
-     */
-    public static Optional<String> extractReferencePointDate(String str) {
-        var matcher = RelativeDate.matcher(str);
-        if (matcher.find()) {
-            return Optional.of(matcher.group(1));
-        }
-        matcher = NamedDate.matcher(str);
-        if (matcher.find()) {
-            return Optional.of(matcher.group(1));
-        }
-        return Optional.empty();
-    }
-
-    /**
      * Return the time associated with a given string. The time will be relative
      * to `now`.
      */

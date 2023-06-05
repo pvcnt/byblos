@@ -23,7 +23,7 @@ public final class StyleVocabulary implements Vocabulary {
 
     @Override
     public List<Vocabulary> dependsOn() {
-        return List.of(MathVocabulary.INSTANCE);
+        return List.of(DataVocabulary.INSTANCE);
     }
 
     @Override

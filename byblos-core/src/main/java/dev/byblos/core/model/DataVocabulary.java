@@ -4,6 +4,7 @@ import dev.byblos.core.stacklang.*;
 
 import java.util.List;
 
+import static dev.byblos.core.model.TypeUtils.asDouble;
 import static dev.byblos.core.model.TypeUtils.asString;
 
 public final class DataVocabulary implements Vocabulary {
@@ -26,7 +27,11 @@ public final class DataVocabulary implements Vocabulary {
 
     @Override
     public List<Word> words() {
-        return List.of(new Query());
+        return List.of(
+                new Query(),
+                new Const(),
+                new Time()
+        );
     }
 
     private static final class Query extends SimpleWord {
@@ -43,6 +48,42 @@ public final class DataVocabulary implements Vocabulary {
         @Override
         public boolean matches(Stack stack) {
             return stack.matches(TypeUtils::isString);
+        }
+    }
+
+    static final class Const extends SimpleWord {
+
+        Const() {
+            super("const", "Double -- TimeSeriesExpr");
+        }
+
+        @Override
+        protected Stack execute(Stack stack) {
+            var expr = new ConstantExpr(asDouble(stack.get(0)));
+            return stack.popAndPush(expr);
+        }
+
+        @Override
+        public boolean matches(Stack stack) {
+            return stack.matches(TypeUtils::isDouble);
+        }
+    }
+
+    static final class Time extends SimpleWord {
+
+        Time() {
+            super("time", "String -- TimeSeriesExpr");
+        }
+
+        @Override
+        public boolean matches(Stack stack) {
+            return stack.matches(TypeUtils::isString);
+        }
+
+        @Override
+        protected Stack execute(Stack stack) {
+            var expr = new TimeExpr(asString(stack.get(0)));
+            return stack.popAndPush(expr);
         }
     }
 }
