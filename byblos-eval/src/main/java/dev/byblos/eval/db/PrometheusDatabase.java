@@ -38,6 +38,7 @@ public final class PrometheusDatabase implements Database {
         baseUrl = config.getString("endpoint");
         client = createHttpClient();
         objectMapper = createObjectMapper();
+        LOGGER.info("Connected to {}", baseUrl);
     }
 
     @Override
