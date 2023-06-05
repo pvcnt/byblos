@@ -1,46 +1,22 @@
-# byblos
+# Byblos
 
 [![Build Java](https://github.com/pvcnt/byblos/actions/workflows/build.yaml/badge.svg)](https://github.com/pvcnt/byblos/actions/workflows/build.yaml)
 
-Byblos is a generator of [RRDtool](https://oss.oetiker.ch/rrdtool/)-like graphs for [Prometheus](https://prometheus.io/).
+Byblos is a generator of graphs for [Prometheus](https://prometheus.io/).
 
-## Usage
+While most dashboarding tools offer dynamic graphs (where one can easily point and click), Byblos generates PNG images.
+Compared to dynamic graphs, those PNG graphs can be easily embedded anywhere where images can be, such as in emails, websites or on-call systems.
+They can also easily be downloaded, shared (e.g., via Slack or email), and saved in order to work around data expiration.
 
-Byblos exposes a GET endpoint that takes as input a Prometheus expression and renders it as an image.
+![Example chart](docs/node_disk_read_bytes_total.png)
 
-For example, let us use the public Prometheus instance hosted at demo.promlabs.com.
-Given [the following Prometheus expression](https://demo.promlabs.com/graph?g0.expr=node_disk_read_bytes_total&g0.tab=0&g0.range_input=1w):
-```
-node_disk_read_bytes_total
-```
+The approach taken here is largely inspired by [Atlas](https://netflix.github.io/atlas-docs/), which in turn was inspired by [RRDtool](https://oss.oetiker.ch/rrdtool/).
 
-the following request will generate an image for it:
-```
-https://byblos.fly.dev/api/v1/graph?q=node_disk_read_bytes_total&s=now-1w
-```
+## Documentation
 
-which will render something like:
+Documentation is located under the `docs/` directory.
 
-![Example chart](graph.png)
-
-## Run locally
-
-You can start the Docker image directly:
-```bash
-docker run -p 8080:8080 -ghcr.io/pvcnt/byblos/byblos
-```
-
-If you need to customise the configuration, you can pass an additional configuration file as an extra argument, e.g.:
-```bash
-docker run -p 8080:8080 -v $PWD/custom.conf:/custom.conf ghcr.io/pvcnt/byblos/byblos /custom.conf
-```
-
-This file can be used for example to customise the Prometheus instance to connect to:
-```
-byblos.eval.db {
-    endpoint = "https://my.prometheus.instance"
-}
-```
+* [Getting started](docs/getting-started.md)
 
 ## License
 
