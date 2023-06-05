@@ -91,6 +91,9 @@ public final class Grapher {
 
     private GraphResult evalAndRender(GraphConfig config, Multimap<DataExpr, TimeSeries> data) throws IOException {
         var graphDef = create(config, e -> e.expr().eval(config.evalContext(), data));
+        if (graphDef.numLines() == 0) {
+            throw new IllegalStateException("Expression generated no lines");
+        }
         var baos = new ByteArrayOutputStream();
         config.engine().write(graphDef, baos);
         return GraphResult.ok(config, baos.toByteArray());
