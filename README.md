@@ -17,6 +17,7 @@ The approach taken here is largely inspired by [Atlas](https://netflix.github.io
 Documentation is located under the `docs/` directory.
 
 * [Getting started](docs/getting-started.md)
+* [Graph API](docs/graph-api.md)
 
 ## License
 
