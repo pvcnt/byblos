@@ -18,8 +18,4 @@ public record GraphResult(GraphConfig config, byte[] data, Code code, Optional<S
     public static GraphResult systemError(GraphConfig config, byte[] data, String message) {
         return new GraphResult(config, data, Code.SYSTEM_ERROR, Optional.of(message));
     }
-
-    public boolean isSuccess() {
-        return code == Code.OK;
-    }
 }

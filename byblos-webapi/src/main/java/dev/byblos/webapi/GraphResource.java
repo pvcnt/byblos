@@ -64,11 +64,11 @@ public final class GraphResource {
 
     private static ResponseEntity<?> toResponse(GraphResult result) {
         var status = switch (result.code()) {
-            case OK -> HttpStatus.BAD_REQUEST;
+            case OK -> HttpStatus.OK;
             case USER_ERROR -> HttpStatus.BAD_REQUEST;
             case SYSTEM_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
-        if (result.isSuccess() || result.data().length > 0) {
+        if (status == HttpStatus.OK || result.data().length > 0) {
             return ResponseEntity.status(status)
                     .contentType(MediaType.parseMediaType(result.config().contentType()))
                     .body(result.data());
