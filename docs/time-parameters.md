@@ -30,7 +30,7 @@ For every format based on a date, a zone offset can be explicitely specified at 
 2023-06-05T11:25+0230
 ```
 
-`Z` can also be used to specify a UTC timezone:
+`Z` can also be used to specify a UTC timezone, for example:
 
 ```
 2023-06-05T11:25Z

@@ -14,7 +14,7 @@ The below table details query parameters available to specify which data to disp
 
 | Name | Type | Description | Default |
 |------|------|-------------|---------|
-| `q`  | string | Query expression | None - required |
+| `q`  | string | [Query expression](stack-language.md) | *required* |
 | `s`  | [time](time-parameters.md#time) | Start time | `e-3h` |
 | `e`  | [time](time-parameters.md#time) | End time | `now` |
 | `step` | [duration](time-parameters.md#duration) | Interval between two data points | auto |
