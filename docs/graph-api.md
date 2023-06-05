@@ -15,8 +15,8 @@ The below table details query parameters available to specify which data to disp
 | Name | Type | Description | Default |
 |------|------|-------------|---------|
 | `q`  | string | Query expression | None - required |
-| `s`  | time | Start time | `e-3h` |
-| `e`  | time | End time | `now` |
+| `s`  | [time](time-parameters.md) | Start time | `e-3h` |
+| `e`  | [time](time-parameters.md) | End time | `now` |
 | `step` | duration | Interval between two data points | auto |
 | `tz` | Time zone | Time zone | `US/Pacific` |
 
