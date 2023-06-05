@@ -15,10 +15,10 @@ The below table details query parameters available to specify which data to disp
 | Name | Type | Description | Default |
 |------|------|-------------|---------|
 | `q`  | string | Query expression | None - required |
-| `s`  | [time](time-parameters.md) | Start time | `e-3h` |
-| `e`  | [time](time-parameters.md) | End time | `now` |
-| `step` | duration | Interval between two data points | auto |
-| `tz` | Time zone | Time zone | `US/Pacific` |
+| `s`  | [time](time-parameters.md#time) | Start time | `e-3h` |
+| `e`  | [time](time-parameters.md#time) | End time | `now` |
+| `step` | [duration](time-parameters.md#duration) | Interval between two data points | auto |
+| `tz` | [timezone](time-parameters.md#timezone) | Time zone | `US/Pacific` |
 
 **In most cases, you should not use the `step` parameter.**
 An appropriate step size will be automatically computed, depending on the specified time window and the image dimensions.

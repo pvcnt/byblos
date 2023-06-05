@@ -1,9 +1,14 @@
 # Time parameters
 
-This page explains how time parameters (e.g., `s` and `e`) are specified in the APIs.
-Various formats can be used, which are detailed in dedicated sections.
+This page explains how time parameters (e.g., `s` and `e`) can be specified in the APIs.
 
-## Absolute times
+## Timezone
+
+Timezones can be specified using [any valid time zone ID](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
+## Time
+
+### Absolute time
 
 Times can be specified in an absolute manner, using one of the following [formats](https://pubs.opengroup.org/onlinepubs/009695399/functions/strftime.html):
 
@@ -33,7 +38,7 @@ For every format based on a date, a zone offset can be explicitely specified at 
 
 If no timezone is specified, dates are parsed using the first timezone specified in the request as a reference.
 
-## Named times
+### Named time
 
 Times can be specified using a reference to a well-known point in time:
 
@@ -44,7 +49,7 @@ Times can be specified using a reference to a well-known point in time:
 | `s` | Start time |
 | `e` | End time |
 
-## Relative times
+### Relative time
 
 Times can be specified as an offset duration from a named time, for example:
 
@@ -55,9 +60,11 @@ s+2d
 s+P2DT6H
 ```
 
-Durations themselves can be specified in two fashions, detailed in the following subsections.
+Durations themselves can be specified in two fashions, detailed in the following section.
 
-### Simple durations
+## Duration
+
+### Simple duration
 
 Durations can be specified using a positive integer following by a unit.
 
@@ -71,7 +78,7 @@ Durations can be specified using a positive integer following by a unit.
 | `month`, `months`               | Number of months (30 days) |
 | `y`, `year`, `years`            | Number of years (365 days) |
 
-### ISO durations
+### ISO duration
 
 Durations can be specified using an [ISO-formatted](https://datatracker.ietf.org/doc/html/rfc3339#appendix-A) string.
 ISO durations are limited to days (`D`) as the largest part that can be used.
