@@ -41,15 +41,30 @@ public abstract class GraphConfig {
 
     public abstract ImageFlags flags();
 
-    public abstract String format();
+    @Value.Default
+    public String format() {
+        return "png";
+    }
 
-    public abstract String id();
+    @Value.Default
+    public String id() {
+        return "default";
+    }
 
-    public abstract Features features();
+    @Value.Default
+    public Features features() {
+        return Features.STABLE;
+    }
 
-    public abstract boolean browser();
+    @Value.Default
+    public boolean browser() {
+        return false;
+    }
 
-    public abstract boolean allowedFromBrowser();
+    @Value.Default
+    public boolean allowedFromBrowser() {
+        return true;
+    }
 
     public abstract String uri();
 

@@ -17,25 +17,46 @@ public abstract class ImageFlags {
 
     public abstract int height();
 
-    public abstract double zoom();
+    @Value.Default
+    public double zoom() {
+        return 1.0;
+    }
 
     public abstract Map<Integer, Axis> axes();
 
-    public abstract boolean axisPerLine();
+    @Value.Default
+    public boolean axisPerLine() {
+        return false;
+    }
 
-    public abstract boolean showLegend();
+    @Value.Default
+    public boolean showLegend() {
+        return false;
+    }
 
-    public abstract boolean showLegendStats();
+    @Value.Default
+    public boolean showLegendStats() {
+        return true;
+    }
 
-    public abstract boolean showOnlyGraph();
+    @Value.Default
+    public boolean showOnlyGraph() {
+        return false;
+    }
 
-    public abstract VisionType vision();
+    @Value.Default
+    public VisionType vision() {
+        return VisionType.normal;
+    }
 
     public abstract String palette();
 
     public abstract String theme();
 
-    public abstract Layout layout();
+    @Value.Default
+    public Layout layout() {
+        return Layout.CANVAS;
+    }
 
     public abstract Set<String> hints();
 

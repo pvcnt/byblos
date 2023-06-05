@@ -42,55 +42,56 @@ public final class GraphConfigFactory {
                 .start(request.getFirstParam("s"))
                 .end(request.getFirstParam("e"))
                 .step(request.getFirstParam("step"))
-                .format(request.getFirstParam("format").orElse("png"))
                 .uri(request.uri());
 
-        var id = request.getFirstParam("id").or(() -> {
+        request.getFirstParam("format").ifPresent(builder::format);
+
+        request.getFirstParam("id").or(() -> {
             // Only look at headers if the id is not explicitly set on the URI
             return request.getFirstHeader("origin").map(GraphConfigFactory::extractHostname);
-        }).orElse("default");
-        builder.id(id);
+        }).ifPresent(builder::id);
 
         var features = request.getFirstParam("features").map(Features::fromString).orElse(Features.STABLE);
         builder.features(features);
 
-        var axes = IntStream.rangeClosed(0, GraphConstants.MaxYAxis)
-                .mapToObj(i -> Map.entry(i, newAxis(request, i)))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        var vision = request.getFirstParam("vision").map(VisionType::fromString).orElse(VisionType.normal);
-        var theme = request.getFirstParam("theme").orElse(settings.theme());
-        var palette = request.getFirstParam("palette").orElse(settings.primaryPalette(theme));
-        var flags = ImmutableImageFlags.builder()
-                .title(request.getFirstParam("title").filter(x -> !x.isEmpty()))
-                .width(request.getFirstParam("w").map(Integer::parseInt).orElse(settings.width()))
-                .height(request.getFirstParam("h").map(Integer::parseInt).orElse(settings.height()))
-                .zoom(request.getFirstParam("zoom").map(Double::parseDouble).orElse(1.0))
-                .axes(axes)
-                .axisPerLine(asBoolean(request.getFirstParam("axis_per_line")))
-                .showLegend(!asBoolean(request.getFirstParam("no_legend")))
-                .showLegendStats(!asBoolean(request.getFirstParam("no_legend_stats")))
-                .showOnlyGraph(asBoolean(request.getFirstParam("only_graph")))
-                .vision(vision)
-                .palette(palette)
-                .theme(theme)
-                .layout(request.getFirstParam("layout").map(Layout::fromString).orElse(Layout.CANVAS))
-                .hints(processHints(request.getFirstParam("hints")))
-                .build();
-        builder.flags(flags);
+        builder.flags(toImageFlags(request));
 
         var timezones = List.copyOf(Lists.reverse(new ArrayList<>(request.params().get("tz"))));
         builder.timezones(timezones);
 
-        var browser = request.getFirstHeader("user-agent")
+        request.getFirstHeader("user-agent")
                 .map(settings::isBrowserAgent)
-                .orElse(false);
-        builder.browser(browser).allowedFromBrowser(true);
+                .ifPresent(builder::browser);
 
         try {
             builder.parsedQuery(parseQuery(q.get(), timezones, features));
         } catch (Exception e) {
             builder.parseException(e);
         }
+        return builder.build();
+    }
+
+    private ImageFlags toImageFlags(GraphRequest request) {
+        var axes = IntStream.rangeClosed(0, GraphConstants.MaxYAxis)
+                .mapToObj(i -> Map.entry(i, newAxis(request, i)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        var theme = request.getFirstParam("theme").orElse(settings.theme());
+        var palette = request.getFirstParam("palette").orElse(settings.primaryPalette(theme));
+        var builder = ImmutableImageFlags.builder()
+                .title(request.getFirstParam("title").filter(x -> !x.isEmpty()))
+                .width(request.getFirstParam("w").map(Integer::parseInt).orElse(settings.width()))
+                .height(request.getFirstParam("h").map(Integer::parseInt).orElse(settings.height()))
+                .axes(axes)
+                .palette(palette)
+                .theme(theme)
+                .layout(request.getFirstParam("layout").map(Layout::fromString).orElse(Layout.CANVAS))
+                .hints(processHints(request.getFirstParam("hints")));
+        request.getFirstParam("zoom").map(Double::parseDouble).ifPresent(builder::zoom);
+        request.getFirstParam("vision").map(VisionType::fromString).ifPresent(builder::vision);
+        request.getFirstParam("axis_per_line").map(this::asBoolean).ifPresent(builder::axisPerLine);
+        request.getFirstParam("no_legend").map(this::asNegatedBoolean).ifPresent(builder::showLegend);
+        request.getFirstParam("no_legend_stats").map(this::asNegatedBoolean).ifPresent(builder::showLegendStats);
+        request.getFirstParam("only_graph").map(this::asBoolean).ifPresent(builder::showOnlyGraph);
         return builder.build();
     }
 
@@ -105,7 +106,7 @@ public final class GraphConfigFactory {
         return origin;
     }
 
-    private static Optional<String> getAxisParam(GraphRequest request, String k, int id) {
+    private Optional<String> getAxisParam(GraphRequest request, String k, int id) {
         return request.getFirstParam(String.format("%s.%s", k, id)).or(() -> request.getFirstParam(k));
     }
 
@@ -122,27 +123,31 @@ public final class GraphConfigFactory {
         ).orElse(Set.of());
     }
 
-    private static Axis newAxis(GraphRequest request, int id) {
+    private Axis newAxis(GraphRequest request, int id) {
         // Prefer the scale parameter if present. If not, then fallback to look at
         // the boolean `o` parameter for backwards compatibility.
         var scale = getAxisParam(request, "scale", id).or(() -> {
             return getAxisParam(request, "o", id).filter("1"::equals).map(x -> "log");
         });
-        return ImmutableAxis.builder()
+        var builder = ImmutableAxis.builder()
                 .upper(getAxisParam(request, "u", id))
                 .lower(getAxisParam(request, "l", id))
                 .scale(scale)
-                .stack(asBoolean(getAxisParam(request, "stack", id)))
                 .yLabel(getAxisParam(request, "ylabel", id).filter(s -> !s.isEmpty()))
                 .tickLabels(getAxisParam(request, "tick_labels", id))
                 .palette(request.getFirstParam(String.format("palette.%s", id)))
                 .sort(getAxisParam(request, "sort", id))
-                .order(getAxisParam(request, "order", id))
-                .build();
+                .order(getAxisParam(request, "order", id));
+        getAxisParam(request, "stack", id).map(this::asBoolean).ifPresent(builder::stack);
+        return builder.build();
     }
 
-    private static boolean asBoolean(Optional<String> value) {
-        return value.filter("1"::equals).isPresent();
+    private boolean asBoolean(String value) {
+        return "1".equals(value);
+    }
+
+    private boolean asNegatedBoolean(String value) {
+        return !asBoolean(value);
     }
 
     private List<StyleExpr> parseQuery(String q, List<String> timezones, Features features) throws InvalidSyntaxException {

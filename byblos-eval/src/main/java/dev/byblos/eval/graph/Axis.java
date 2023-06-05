@@ -21,7 +21,10 @@ public abstract class Axis {
 
     public abstract Optional<String> scale();
 
-    public abstract boolean stack();
+    @Value.Default
+    public boolean stack() {
+        return false;
+    }
 
     public abstract Optional<String> yLabel();
 

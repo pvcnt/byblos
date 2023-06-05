@@ -92,7 +92,8 @@ public final class Grapher {
     private GraphResult evalAndRender(GraphConfig config, Multimap<DataExpr, TimeSeries> data) throws IOException {
         var graphDef = create(config, e -> e.expr().eval(config.evalContext(), data));
         if (graphDef.numLines() == 0) {
-            throw new IllegalStateException("Expression generated no lines");
+            // Do not draw an empty graph. "q" is a required parameter.
+            throw new IllegalStateException("expression generated no lines");
         }
         var baos = new ByteArrayOutputStream();
         config.engine().write(graphDef, baos);
