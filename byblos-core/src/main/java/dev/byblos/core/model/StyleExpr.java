@@ -14,13 +14,6 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public record StyleExpr(TimeSeriesExpr expr, Map<String, String> settings) implements Expr {
-    public long offset() {
-        return expr.dataExprs().stream()
-                .mapToLong(e -> e.offset().toMillis())
-                .min()
-                .orElse(0L);
-    }
-
     public String legend(TimeSeries t) {
         return legend(t.label(), t.tags());
     }

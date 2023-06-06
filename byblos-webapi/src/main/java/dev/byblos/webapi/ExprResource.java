@@ -90,8 +90,7 @@ public final class ExprResource {
                 .map(ExprResource::normalizeLegendVars)
                 .map(e -> Map.of(
                         "expr", normalizeExprString(e.expr()),
-                        "settings", e.settings(),
-                        "offset", e.offset()))
+                        "settings", e.settings()))
                 .toList();
         return ResponseEntity.ok(evaluated);
     }

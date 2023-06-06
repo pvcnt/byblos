@@ -9,7 +9,6 @@ import dev.byblos.core.stacklang.Vocabulary;
 import dev.byblos.core.util.Strings;
 
 import java.awt.Color;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -127,15 +126,8 @@ public final class DefaultSettings {
     /**
      * Returns default palette name to use.
      */
-    public String primaryPalette(String theme) {
-        return config.getString(theme + ".palette.primary");
-    }
-
-    /**
-     * Returns default palette name to use for lines with an offset.
-     */
-    public String offsetPalette(String theme) {
-        return config.getString(theme + ".palette.offset");
+    public String palette(String theme) {
+        return config.getString(theme + ".palette");
     }
 
     /**

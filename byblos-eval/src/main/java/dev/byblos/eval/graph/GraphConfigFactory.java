@@ -1,7 +1,6 @@
 package dev.byblos.eval.graph;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import dev.byblos.chart.GraphConstants;
 import dev.byblos.chart.model.Layout;
@@ -76,7 +75,7 @@ public final class GraphConfigFactory {
                 .mapToObj(i -> Map.entry(i, newAxis(request, i)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         var theme = request.getFirstParam("theme").orElse(settings.theme());
-        var palette = request.getFirstParam("palette").orElse(settings.primaryPalette(theme));
+        var palette = request.getFirstParam("palette").orElse(settings.palette(theme));
         var builder = ImmutableImageFlags.builder()
                 .title(request.getFirstParam("title").filter(x -> !x.isEmpty()))
                 .width(request.getFirstParam("w").map(Integer::parseInt).orElse(settings.width()))

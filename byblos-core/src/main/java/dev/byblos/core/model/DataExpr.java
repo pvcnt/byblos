@@ -2,13 +2,9 @@ package dev.byblos.core.model;
 
 import com.google.common.collect.Multimap;
 
-import java.time.Duration;
 import java.util.List;
 
-public record DataExpr(String exprString, Duration offset) implements TimeSeriesExpr {
-    public DataExpr(String exprString) {
-        this(exprString, Duration.ZERO);
-    }
+public record DataExpr(String exprString) implements TimeSeriesExpr {
 
     @Override
     public List<DataExpr> dataExprs() {

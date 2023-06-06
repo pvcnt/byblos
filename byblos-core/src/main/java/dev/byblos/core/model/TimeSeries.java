@@ -5,16 +5,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public record TimeSeries(TimeSeq data, String label, Map<String, String> tags) {
-
     public TimeSeries withData(TimeSeq data) {
         return new TimeSeries(data, label, tags);
     }
 
     public TimeSeries withLabel(String label) {
-        return new TimeSeries(data, label, tags);
-    }
-
-    public TimeSeries withTags(Map<String, String> tags) {
         return new TimeSeries(data, label, tags);
     }
 

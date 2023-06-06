@@ -110,20 +110,19 @@ public final class Grapher {
         var multiY = plotExprs.size() > 1 && !GraphDef.ambiguousMultiY(config.flags().hints());
 
         var graphPalette = newPalette(config.flags().palette());
-        var shiftPalette = newPalette(settings.offsetPalette(config.flags().theme()));
 
         var plots = plotExprs.entrySet()
                 .stream()
                 .sorted(Comparator.comparingInt(Map.Entry::getKey))
                 .map(e -> {
                     var axis = config.flags().axes().get(e.getKey());
-                    return createPlot(config, eval, axis, e.getValue(), graphPalette, shiftPalette, multiY, warnings);
+                    return createPlot(config, eval, axis, e.getValue(), graphPalette, multiY, warnings);
                 })
                 .collect(Collectors.toList());
         return config.newGraphDef(plots, warnings.build());
     }
 
-    private PlotDef createPlot(GraphConfig config, Function<StyleExpr, ResultSet> eval, Axis axis, List<StyleExpr> exprs, Function<String, Color> graphPalette, Function<String, Color> shiftPalette, boolean multiY, ImmutableList.Builder<String> warnings) {
+    private PlotDef createPlot(GraphConfig config, Function<StyleExpr, ResultSet> eval, Axis axis, List<StyleExpr> exprs, Function<String, Color> graphPalette, boolean multiY, ImmutableList.Builder<String> warnings) {
         var axisPalette = axis.palette().map(Grapher::newPalette).orElse(graphPalette);
         List<String> messages = List.of();
         List<LineDef> lines = new ArrayList<>();
@@ -141,7 +140,7 @@ public final class Grapher {
             if (!result.messages().isEmpty()) {
                 messages = List.of(result.messages().get(0));
             }
-            lines.addAll(createLine(config, result, axis, expr, axisPalette, shiftPalette, warnings));
+            lines.addAll(createLine(config, result, axis, expr, axisPalette, warnings));
         }
 
         // Apply sort based on URL parameters. This will take precedence over
@@ -151,17 +150,14 @@ public final class Grapher {
         return axis.newPlotDef(Stream.concat(sortedLines.stream(), messages.stream().map(s -> new MessageDef("... " + s + " ..."))).collect(Collectors.toList()), multiY);
     }
 
-    private List<LineDef> createLine(final GraphConfig config, final ResultSet result, final Axis axis, final StyleExpr expr, final Function<String, Color> axisPalette, final Function<String, Color> shiftPalette, final ImmutableList.Builder<String> warnings) {
+    private List<LineDef> createLine(final GraphConfig config, final ResultSet result, final Axis axis, final StyleExpr expr, final Function<String, Color> axisPalette, final ImmutableList.Builder<String> warnings) {
         var labelledTS = result.data().stream().map(t -> {
             var stats = SummaryStats.fromData(t.data(), config.startMillis(), config.endMillis());
-            var offset = Strings.toString(Duration.ofMillis(expr.offset()));
-            var outputTags = new HashMap<>(t.tags());
-            outputTags.put(TagKey.offset, offset);
             // Additional stats can be used for substitutions, but should not be included
             // as part of the output tag map
-            var legendTags = new HashMap<>(outputTags);
+            var legendTags = new HashMap<>(t.tags());
             legendTags.putAll(stats.tags(axis.statFormatter()));
-            return Map.entry(new TimeSeries(t.data(), expr.legend(t.label(), legendTags), outputTags), stats);
+            return Map.entry(new TimeSeries(t.data(), expr.legend(t.label(), legendTags), t.tags()), stats);
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         var palette = expr.palette().map(Grapher::newPalette).orElseGet(() -> {
@@ -169,7 +165,7 @@ public final class Grapher {
                 var color = settings.resolveColor(config.flags().theme(), c);
                 var it = Palette.singleColor(color).iterator();
                 return (Function<String, Color>) s1 -> it.next();
-            }).orElseGet(() -> (expr.offset() > 0L) ? shiftPalette : axisPalette);
+            }).orElse(axisPalette);
         });
 
         var lineDefs = labelledTS.entrySet()
