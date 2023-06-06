@@ -23,7 +23,7 @@ This page details the most relevant configuration parameters that an administrat
 
 ## Graph defaults
 
-The default value of several query parameters of the [Graph API](graph-api.md) can be overriden by configuration.
+The default value of several query parameters of the [Graph API](../user/graph-api.md) can be overriden by configuration.
 
 | Key | Query parameter |
 |-----|-----------------|

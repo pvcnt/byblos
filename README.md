@@ -12,13 +12,7 @@ They can also easily be downloaded, shared (e.g., via Slack or email), and saved
 
 ## Documentation
 
-Documentation is located under the `docs/` directory.
-
-* [Getting started](docs/getting-started.md)
-* [Graph API](docs/graph-api.md)
-* [Stack language](docs/stack-language/index.md)
-* [Security](docs/security.md)
-* [Configuration](docs/configuration.md)
+Documentation is available at https://pvcnt.github.io/byblos/
 
 ## License
 

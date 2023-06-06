@@ -38,7 +38,7 @@ Lists always contain litteral, i.e., commands are not executed.
 For example, `(,a,:dup,)` defines a stack with a single element, which is the list `["a", ":dup"]`.
 
 Any double value that is left on the stack will get implicitly converted to [a constant line](const.md).
-Any string value that is left on the stack will get implicitly converted to [a query](query.ùd).
+Any string value that is left on the stack will get implicitly converted to [a query](query.md).
 
 ## Variables
 
@@ -51,35 +51,5 @@ The following table contains a list of well-known variables:
 
 ## Vocabulary
 
-### Stack manipulation
-
-* [:2over](2over.md)
-* [:-rot](-rot.md)
-* [:clear](clear.md)
-* [:depth](depth.md)
-* [:drop](drop.md)
-* [:dup](dup.md)
-* [:get](get.md)
-* [:ndrop](ndrop.md)
-* [:over](over.md)
-* [:pick](pick.md)
-* [:set](set.md)
-* [:swap](swap.md)
-
-### Data
-
-* [:const](const.md)
-* [:query](query.md)
-
-### Styling
-
-* [:alpha](alpha.md)
-* [:axis](axis.md)
-* [:color](color.md)
-* [:legend](legend.md)
-* [:limit](limit.md)
-* [:ls](ls.md)
-* [:lw](lw.md)
-* [:order](order.md)
-* [:palette](palette.md)
-* [:sort](sort.md)
+Words available in the stack language are presented in the other pages of this category.
+Please use the left navigation bar to get the definition of a word.

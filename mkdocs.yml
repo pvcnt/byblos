@@ -1,0 +1,58 @@
+site_name: Byblos
+site_url: https://pvcnt.github.io/byblos/
+repo_url: https://github.com/pvcnt/byblos/
+repo_name: pvcnt/byblos
+edit_uri: edit/main/docs/
+nav:
+  - Home:
+    - Introduction: index.md
+    - Getting started: getting-started.md
+  - User guide:
+    - Graph API: user/graph-api.md
+    - Time parameters: user/time-parameters.md
+    - Stack language:
+      - Introduction: user/stack-language/index.md
+      - Stack manipulation:
+        - 2over: user/stack-language/2over.md
+        - -rot: user/stack-language/-rot.md
+        - clear: user/stack-language/clear.md
+        - depth: user/stack-language/depth.md
+        - drop: user/stack-language/drop.md
+        - dup: user/stack-language/dup.md
+        - get: user/stack-language/get.md
+        - ndrop: user/stack-language/ndrop.md
+        - over: user/stack-language/over.md
+        - pick: user/stack-language/pick.md
+        - rot: user/stack-language/rot.md
+        - set: user/stack-language/set.md
+        - swap: user/stack-language/swap.md
+      - Data:
+        - const: user/stack-language/const.md
+        - query: user/stack-language/query.md
+      - Styling:
+        - alpha: user/stack-language/alpha.md
+        - axis: user/stack-language/axis.md
+        - color: user/stack-language/color.md
+        - legend: user/stack-language/legend.md
+        - limit: user/stack-language/limit.md
+        - ls: user/stack-language/ls.md
+        - lw: user/stack-language/lw.md
+        - order: user/stack-language/order.md
+        - palette: user/stack-language/palette.md
+        - sort: user/stack-language/sort.md
+  - Admin guide:
+    - Configuration: admin/configuration.md
+    - Security: admin/security.md
+theme:
+  name: material
+  logo: images/logo.png
+  favicon: images/favicon.png
+  palette:
+    primary: teal
+    accent: teal
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+markdown_extensions:
+  - pymdownx.superfences

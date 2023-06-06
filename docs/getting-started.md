@@ -2,10 +2,10 @@
 
 This page explains how to quickly start using Byblos.
 
-## Demo instance
+## Use demo instance
 
-The simplest way to start playing around with Byblos is to use our demo instance, available at https://byblos.fly.dev
-The latter is configured to use the demo Prometheus instance available at https://demo.promlabs.com
+The simplest way to start playing around with Byblos is to use our demo instance, available at [byblos.fly.dev](https://byblos.fly.dev).
+The latter is configured to use the demo Prometheus instance available at [demo.promlabs.com](https://demo.promlabs.com).
 
 For example, let us consider the following prometheus expression, evaluated over the past week:
 
@@ -13,7 +13,7 @@ For example, let us consider the following prometheus expression, evaluated over
 node_disk_read_bytes_total
 ```
 
-It can be visualised at https://demo.promlabs.com/graph?g0.expr=node_disk_read_bytes_total&g0.tab=0&g0.range_input=1w:
+It can be visualised in [the Prometheus console](https://demo.promlabs.com/graph?g0.expr=node_disk_read_bytes_total&g0.tab=0&g0.range_input=1w):
 
 ![Example chart in Prometheus console](console-node_disk_read_bytes_total.png)
 
@@ -44,7 +44,7 @@ Similarly to above, the following request can be used to generate a sample PNG g
 https://localhost:8080/api/v1/graph?q=node_disk_read_bytes_total&s=now-1w
 ```
 
-Several [configuration parameters](configuration.md) may be overriden in order to customise the behaviour of Byblos.
+Several [configuration parameters](admin/configuration.md) may be overriden in order to customise the behaviour of Byblos.
 You may provide one or several config files as additional arguments, that will take precedence over the default configuration:
 
 ```bash
