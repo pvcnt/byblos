@@ -2,7 +2,7 @@
 
 [![Build Java](https://github.com/pvcnt/byblos/actions/workflows/build.yaml/badge.svg)](https://github.com/pvcnt/byblos/actions/workflows/build.yaml)
 
-Byblos is a generator of graphs for [Prometheus](https://prometheus.io/).
+Byblos renders [Prometheus](https://prometheus.io/) queries as PNG graphs.
 
 While most dashboarding tools offer dynamic graphs (where one can easily point and click), Byblos generates PNG images.
 Compared to dynamic graphs, those PNG graphs can be easily embedded anywhere where images can be, such as in emails, websites or on-call systems.
