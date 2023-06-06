@@ -13,8 +13,6 @@ public final class ChartSettings {
 
     private final static Config config = ConfigManager.load().getConfig("byblos.chart");
 
-    public static String defaultTheme = config.getString("theme.default");
-
     /**
      * For some of the font operations a graphics context is needed. This is a simple dummy instance
      * that can be used for cases where we need to determine the size before the actual image object

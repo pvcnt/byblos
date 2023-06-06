@@ -71,6 +71,7 @@ abstract class PngGraphEngineTest {
                 .startTime(ZonedDateTime.of(2012, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant())
                 .endTime(ZonedDateTime.of(2012, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC).toInstant())
                 .addPlots(plotDef)
+                .themeName("light")
                 .addWarnings("This is an information message that is shown on the graph to let the user know about something important. It should be long enough to force the message to wrap.")
                 .addWarnings("Something bad happened and we wanted you to know.")
                 .addWarnings("Something really bad happened.")
@@ -245,6 +246,7 @@ abstract class PngGraphEngineTest {
                 .startTime(ZonedDateTime.of(2012, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant())
                 .endTime(ZonedDateTime.of(2012, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC).toInstant())
                 .addPlots(plotDef)
+                .themeName("light")
                 .build();
 
         var fname = getPrefix() + "_" + name + ".png";
@@ -310,12 +312,17 @@ abstract class PngGraphEngineTest {
             var s = Instant.ofEpochMilli(start);
             var e = s.plusMillis(step * nbrSteps);
 
-            // DsType.Gauge
             var seq = new ArrayTimeSeq(s.toEpochMilli(), step, values.stream().flatMap(Collection::stream).mapToDouble(v -> v).toArray());
             var seriesDef = ImmutableLineDef.builder().data(new TimeSeries(seq, "0", Map.of())).build();
             var plotDef = ImmutablePlotDef.builder().data(List.of(seriesDef)).build();
 
-            return ImmutableGraphDef.builder().startTime(s).endTime(e).addPlots(plotDef).step(step).build();
+            return ImmutableGraphDef.builder()
+                    .startTime(s)
+                    .endTime(e)
+                    .addPlots(plotDef)
+                    .step(step)
+                    .themeName("light")
+                    .build();
         }
     }
 

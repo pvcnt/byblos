@@ -61,11 +61,6 @@ public abstract class GraphConfig {
         return false;
     }
 
-    @Value.Default
-    public boolean allowedFromBrowser() {
-        return true;
-    }
-
     public abstract String uri();
 
     public boolean shouldOutputImage() {

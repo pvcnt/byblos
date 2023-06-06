@@ -150,10 +150,7 @@ public abstract class GraphDef {
     /**
      * Return which theme to use for the chart, typically light or dark mode.
      */
-    @Value.Default
-    public String themeName() {
-        return ChartSettings.defaultTheme;
-    }
+    public abstract String themeName();
 
     /**
      * Return the pattern used for formatting the number values in text based outputs.
@@ -190,7 +187,6 @@ public abstract class GraphDef {
     /**
      * Return the color theme to use for the graph.
      */
-    @Value.Default
     public Theme theme() {
         return ChartSettings.theme(themeName());
     }

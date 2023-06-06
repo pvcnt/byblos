@@ -9,7 +9,6 @@ import dev.byblos.chart.model.*;
 import dev.byblos.chart.util.PngImage;
 import dev.byblos.core.model.*;
 import dev.byblos.core.stacklang.InvalidSyntaxException;
-import dev.byblos.core.util.Strings;
 import dev.byblos.eval.db.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.List;
 import java.util.*;
 import java.util.function.Function;
@@ -65,7 +63,7 @@ public final class Grapher {
             LOGGER.error("Error while rendering graph", e);
         }
         var data = new byte[0];
-        if (config.shouldOutputImage()) {
+        if (config.browser() && config.shouldOutputImage()) {
             var pngImage = createErrorImage(e, config.flags().width(), config.flags().height());
             data = pngImage.toByteArray();
         }

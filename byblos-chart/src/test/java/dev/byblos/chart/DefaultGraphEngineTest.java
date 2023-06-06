@@ -1,6 +1,6 @@
 package dev.byblos.chart;
 
-public class DefaultGraphEngineTest extends PngGraphEngineTest{
+public class DefaultGraphEngineTest extends PngGraphEngineTest {
     private final static DefaultGraphEngine ENGINE = new DefaultGraphEngine();
 
     @Override
