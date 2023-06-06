@@ -2,6 +2,9 @@ package dev.byblos.webapi.security;
 
 import com.typesafe.config.Config;
 
+import java.util.Optional;
+import java.util.Set;
+
 public final class SecuritySettings {
     private final Config config;
     private final boolean enabled;
@@ -9,7 +12,8 @@ public final class SecuritySettings {
     private static final String PROVIDER_KEY = "provider";
     private static final String CLIENT_ID_KEY = "client-id";
     private static final String CLIENT_SECRET_KEY = "client-secret";
-    private static final String SUBDOMAIN_KEY = "subdomain";
+    private static final String GITHUB_ORG_KEY = "github-org";
+    private static final String OKTA_SUBDOMAIN_KEY = "okta-subdomain";
 
     public SecuritySettings(Config config) {
         this.config = config;
@@ -40,8 +44,15 @@ public final class SecuritySettings {
     }
 
     public String subdomain() {
-        checkKeyExists(SUBDOMAIN_KEY);
-        return config.getString(SUBDOMAIN_KEY);
+        checkKeyExists(OKTA_SUBDOMAIN_KEY);
+        return config.getString(OKTA_SUBDOMAIN_KEY);
+    }
+
+    public Optional<String> githubOrg() {
+        if (config.hasPath(GITHUB_ORG_KEY)) {
+            return Optional.of(config.getString(GITHUB_ORG_KEY));
+        }
+        return Optional.empty();
     }
 
     private void checkKeyExists(String key) {

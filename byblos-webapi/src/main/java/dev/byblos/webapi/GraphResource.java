@@ -69,7 +69,9 @@ public final class GraphResource {
             case SYSTEM_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
         if (status == HttpStatus.OK || result.data().length > 0) {
-            return ResponseEntity.status(status)
+            // When viewing a page in a browser an error response is not rendered. To make it
+            // clearer to the user we return a 200 with the error information encoded into an image.
+            return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(result.config().contentType()))
                     .body(result.data());
         }

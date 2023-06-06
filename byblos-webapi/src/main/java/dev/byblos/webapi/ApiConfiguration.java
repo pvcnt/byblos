@@ -9,14 +9,9 @@ import dev.byblos.eval.db.DatabaseSupplier;
 import dev.byblos.eval.graph.DefaultSettings;
 import dev.byblos.eval.graph.GraphConfigFactory;
 import dev.byblos.eval.graph.Grapher;
-import dev.byblos.webapi.security.EmptyClientRegistrationRepository;
 import dev.byblos.webapi.security.SecuritySettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
 @Configuration
 public class ApiConfiguration {
@@ -63,48 +58,5 @@ public class ApiConfiguration {
     @Bean
     Grapher grapher(DefaultSettings settings, Database database) {
         return new Grapher(settings, database);
-    }
-
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository(SecuritySettings settings) {
-        if (settings.enabled()) {
-            return new InMemoryClientRegistrationRepository(clientRegistration(settings));
-        }
-        return EmptyClientRegistrationRepository.INSTANCE;
-    }
-
-    private ClientRegistration clientRegistration(SecuritySettings settings) {
-        return switch (settings.provider()) {
-            case "google" -> googleClientRegistration(settings);
-            case "github" -> githubClientRegistration(settings);
-            case "okta" -> oktaClientRegistration(settings);
-            default -> throw new IllegalArgumentException("Unknown security provider: " + settings.provider());
-        };
-    }
-
-    private ClientRegistration googleClientRegistration(SecuritySettings settings) {
-        return CommonOAuth2Provider.GOOGLE.getBuilder("google")
-                .clientId(settings.clientId())
-                .clientSecret(settings.clientSecret())
-                .build();
-    }
-
-    private ClientRegistration githubClientRegistration(SecuritySettings settings) {
-        return CommonOAuth2Provider.GITHUB.getBuilder("github")
-                .clientId(settings.clientId())
-                .clientSecret(settings.clientSecret())
-                .build();
-    }
-
-    private ClientRegistration oktaClientRegistration(SecuritySettings settings) {
-        var subdomain = settings.subdomain();
-        return CommonOAuth2Provider.OKTA.getBuilder("okta")
-                .clientId(settings.clientId())
-                .clientSecret(settings.clientSecret())
-                .authorizationUri("https://" + subdomain + ".okta.com/oauth2/default/v1/authorize")
-                .tokenUri("https://" + subdomain + ".okta.com/oauth2/default/v1/token")
-                .jwkSetUri("https://" + subdomain + ".okta.com/oauth2/default/v1/keys")
-                .issuerUri("https://" + subdomain + ".okta.com/oauth2/default")
-                .build();
     }
 }
