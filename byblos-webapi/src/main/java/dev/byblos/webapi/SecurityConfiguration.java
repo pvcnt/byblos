@@ -26,14 +26,16 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfiguration {
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, SecuritySettings settings) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, SecuritySettings settings, WebClient rest) throws Exception {
         if (settings.enabled()) {
             http
                     .authorizeHttpRequests()
                     .antMatchers("/health").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .oauth2Login(withDefaults());
+                    .oauth2Login(oauth2 -> oauth2
+                            .userInfoEndpoint(userInfo -> userInfo
+                                    .userService(oauth2UserService(settings, rest))));
         } else {
             http.authorizeRequests().antMatchers("/").permitAll();
         }
@@ -55,8 +57,7 @@ public class SecurityConfiguration {
         return WebClient.builder().filter(oauth2).build();
     }
 
-    @Bean
-    OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService(SecuritySettings settings, WebClient rest) {
+    private OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService(SecuritySettings settings, WebClient rest) {
         return switch (settings.provider()) {
             case "github" -> githubUserService(settings, rest);
             default -> new DefaultOAuth2UserService();
