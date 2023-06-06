@@ -2,6 +2,6 @@
 
 | Input stack | Output stack |
 |-------------|--------------|
-| `Any,:clear` | <empty> |
+| `a,:clear`  | <empty>      |
 
 Remove the item on the top of the stack.

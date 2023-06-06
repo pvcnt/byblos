@@ -7,9 +7,9 @@ public abstract class SimpleWord extends AbstractWord {
     }
 
     @Override
-    public final Context execute(Context context) {
+    public final Context execute(Context context) throws InvalidSyntaxException {
         return context.withStack(execute(context.stack()));
     }
 
-    protected abstract Stack execute(Stack stack);
+    protected abstract Stack execute(Stack stack) throws InvalidSyntaxException;
 }

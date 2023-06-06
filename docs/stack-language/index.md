@@ -53,11 +53,18 @@ The following table contains a list of well-known variables:
 
 ### Stack manipulation
 
+* [:2over](2over.md)
+* [:-rot](-rot.md)
 * [:clear](clear.md)
+* [:depth](depth.md)
 * [:drop](drop.md)
 * [:dup](dup.md)
 * [:get](get.md)
+* [:ndrop](ndrop.md)
+* [:over](over.md)
+* [:pick](pick.md)
 * [:set](set.md)
+* [:swap](swap.md)
 
 ### Data
 

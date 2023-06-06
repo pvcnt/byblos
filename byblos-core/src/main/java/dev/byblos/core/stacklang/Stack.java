@@ -26,12 +26,20 @@ public record Stack(List<Object> items) implements Iterable<Object> {
         return new Stack(Stream.concat(Stream.of(item), items.stream()).toList());
     }
 
+    public Stack pushRight(Object item) {
+        return new Stack(Stream.concat(items.stream(), Stream.of(item)).toList());
+    }
+
     public Stack popAndPush(int n, Object item) {
         return new Stack(Stream.concat(Stream.of(item), items.stream().skip(n)).toList());
     }
 
     public Stack drop(int n) {
         return new Stack(items.stream().skip(n).toList());
+    }
+
+    public Stack dropRight(int n) {
+        return new Stack(items.stream().limit(items.size() - n).toList());
     }
 
     public Stack popAndPush(Object item) {
@@ -48,6 +56,10 @@ public record Stack(List<Object> items) implements Iterable<Object> {
 
     public boolean nonEmpty() {
         return !items.isEmpty();
+    }
+
+    public int size() {
+        return items.size();
     }
 
     public Object get(int n) {
