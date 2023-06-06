@@ -17,6 +17,7 @@ Documentation is located under the `docs/` directory.
 * [Getting started](docs/getting-started.md)
 * [Graph API](docs/graph-api.md)
 * [Stack language](docs/stack-language/index.md)
+* [Security](docs/security.md)
 
 ## License
 

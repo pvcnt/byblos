@@ -1,14 +1,20 @@
 # Graph API
 
-This page details the contract of the graph API.
+The graph API is the resource that allows to execute and render Prometheus queries.
 
-## Endpoint
+## Path
 
 ```
-GET /api/v1/graph?q=<expr>[&<params>]
+/api/v1/graph?q=<expr>[&<params>]
 ```
 
-## Data parameters
+## HTTP method
+
+This endpoint is only accessible via the GET method.
+
+## Query parameters
+
+### Data
 
 The below table details query parameters available to specify which data to display:
 
@@ -25,7 +31,7 @@ An appropriate step size will be automatically computed, depending on the specif
 
 The time zone is used both to interpret relative times (`s` and `e` parameters), and to localise times in the graph.
 
-## Output format
+### Output format
 
 The below table details query parameters available to specify the output format:
 
@@ -37,7 +43,7 @@ The below table details query parameters available to specify the output format:
 
 Note: Even when using a non-image output format, `w` and `h` parameters are used to automatically compute an appropriate `step`.
 
-## Image flags
+### Image flags
 
 The below table details query parameters available to customise the image rendering:
 
@@ -55,13 +61,14 @@ The below table details query parameters available to customise the image render
 | `l` | string or float | Lower bound for the Y-axis | `auto-style` |
 | `u` | string or float | Upper bound for the Y-axis | `auto-style` |
 | `palette` | string | Color palette to use | `armytage` |
+| `theme`| string | Theme to use | `light` |
 | `scale` | string | Scale to use for the Y-axis | `linear` |
 | `tick_labels` | string | Mode to use for display Y-axis ticks | `decimal` |
 | `zoom`   | float   | Apply a zoom factor to the image | `1.0` |
 
 Note: Those parameters do not apply if using a non-image output format (e.g., JSON).
 
-## Legend flags
+### Legend flags
 
 The below table details query parameters available to customise the legend rendering:
 

@@ -44,17 +44,9 @@ Similarly to above, the following request can be used to generate a sample PNG g
 https://localhost:8080/api/v1/graph?q=node_disk_read_bytes_total&s=now-1w
 ```
 
-If you wish to customise the configuration, you may provide one or several config files as additional arguments, that will take precedence over the default configuration:
+Several [configuration parameters](configuration.md) may be overriden in order to customise the behaviour of Byblos.
+You may provide one or several config files as additional arguments, that will take precedence over the default configuration:
 
 ```bash
 docker run -p 8080:8080 -v $PWD/custom.conf:/custom.conf ghcr.io/pvcnt/byblos/byblos /custom.conf
-```
-
-Configuration files are written in [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md).
-For example, you may change the endpoint of the Prometheus instance with the following `custom.conf` file:
-
-```
-byblos.eval.db {
-    endpoint = "https://my.prometheus.instance"
-}
 ```
