@@ -10,8 +10,6 @@ They can also easily be downloaded, shared (e.g., via Slack or email), and saved
 
 ![Example chart](docs/node_disk_read_bytes_total.png)
 
-The approach taken here is largely inspired by [Atlas](https://netflix.github.io/atlas-docs/), which in turn was inspired by [RRDtool](https://oss.oetiker.ch/rrdtool/).
-
 ## Documentation
 
 Documentation is located under the `docs/` directory.
