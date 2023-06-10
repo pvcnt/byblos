@@ -12,7 +12,7 @@ They can also easily be downloaded, shared (e.g., via Slack or email), and saved
 
 ## Documentation
 
-Documentation is available at https://pvcnt.github.io/byblos/
+Documentation is available at https://byblos.graphme.app
 
 ## License
 
