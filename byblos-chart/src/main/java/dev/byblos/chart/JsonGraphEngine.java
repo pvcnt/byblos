@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Base class for all graph engines producing JSON.
+ */
 abstract class JsonGraphEngine implements GraphEngine {
     private final String name;
     protected final static JsonFactory jsonFactory = new JsonFactory();
