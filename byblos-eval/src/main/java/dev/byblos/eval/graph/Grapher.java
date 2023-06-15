@@ -177,7 +177,7 @@ public final class Grapher {
         // sort order that is applied. Otherwise colors would change each time a user
         // changed the sort.
         var sorted = sort(warnings, expr.sortBy(), expr.useDescending(), lineDefs);
-        return expr.limit().map(n -> sorted.subList(0, n)).orElse(sorted);
+        return expr.limit().map(n -> sorted.subList(0, Math.min(sorted.size(), n))).orElse(sorted);
     }
 
     private LineDef createLineDef(GraphConfig config, Axis axis, StyleExpr expr, TimeSeries ts, SummaryStats stats, Function<String, Color> palette) {
