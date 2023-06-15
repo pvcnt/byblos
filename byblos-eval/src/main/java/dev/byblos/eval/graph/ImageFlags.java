@@ -31,7 +31,7 @@ public abstract class ImageFlags {
 
     @Value.Default
     public boolean showLegend() {
-        return false;
+        return true;
     }
 
     @Value.Default
