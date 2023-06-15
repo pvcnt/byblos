@@ -477,4 +477,10 @@ public class StringsTest {
                 MapEntry.entry("foo", "1")
         );
     }
+
+    @Test
+    void parseQueryStringWithPlusSign() {
+        var query = "foo=foo+bar";
+        assertThat(Strings.parseQueryString(query)).contains(MapEntry.entry("foo", "foo bar"));
+    }
 }

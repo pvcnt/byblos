@@ -399,6 +399,7 @@ public final class Strings {
         var params = ImmutableMultimap.<String, String>builder();
         if (null != query) {
             for (var part : query.split("[&;]+")) {
+                part = part.replace("+", " ");
                 var matcher = QueryParam.matcher(part);
                 if (matcher.find()) {
                     params.put(urlDecode(matcher.group(1)), urlDecode(matcher.group(2)));
