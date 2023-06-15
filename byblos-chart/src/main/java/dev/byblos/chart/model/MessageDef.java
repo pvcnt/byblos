@@ -33,9 +33,4 @@ public final class MessageDef implements DataDef {
     public Color color() {
         return color;
     }
-
-    @Override
-    public MessageDef withColor(Color c) {
-        return new MessageDef(label, c);
-    }
 }

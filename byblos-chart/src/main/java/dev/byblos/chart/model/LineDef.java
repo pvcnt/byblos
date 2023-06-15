@@ -66,11 +66,6 @@ public abstract class LineDef implements DataDef {
         return data().label();
     }
 
-    @Override
-    public LineDef withColor(Color c) {
-        return toBuilder().color(c).build();
-    }
-
     public ImmutableLineDef.Builder toBuilder() {
         return ImmutableLineDef.builder().from(this);
     }

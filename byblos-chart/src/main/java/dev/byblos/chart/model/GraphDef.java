@@ -250,19 +250,6 @@ public abstract class GraphDef {
     }
 
     /**
-     * Set the vision type for the graph to simulate types of color blindness.
-     */
-    public GraphDef withVisionType(VisionType vt) {
-        return adjustPlots(plot -> {
-            var newData = plot.data().stream().map(d -> d.withColor(vt.convert(d.color()))).collect(Collectors.toList());
-            return plot.toBuilder()
-                    .data(newData)
-                    .axisColor(plot.axisColor().map(vt::convert))
-                    .build();
-        });
-    }
-
-    /**
      * Return a new graph definition with the line stats filled in.
      */
     public GraphDef computeStats() {

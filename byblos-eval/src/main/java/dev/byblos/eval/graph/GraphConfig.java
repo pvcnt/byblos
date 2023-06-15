@@ -167,8 +167,7 @@ public abstract class GraphConfig {
                 .source(settings().metadataEnabled() ? Optional.of(uri()) : Optional.empty())
                 .warnings(warnings)
                 .renderingHints(flags().hints())
-                .build()
-                .withVisionType(flags().vision());
+                .build();
         return flags().axisPerLine() ? useAxisPerLine(graphDef) : graphDef;
     }
 

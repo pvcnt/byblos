@@ -49,24 +49,6 @@ public final class Palette {
         return new Palette(String.format("%08X", c.getRGB()), List.of(c));
     }
 
-    public static Palette brighter(Color c, int n) {
-        var colors = new ArrayList<Color>(n);
-        colors.add(c);
-        for (int i = 1; i < n; i++) {
-            colors.add(colors.get(i - 1).brighter());
-        }
-        return new Palette(String.format("brighter_%08X", c.getRGB()), colors);
-    }
-
-    public static Palette darker(Color c, int n) {
-        var colors = new ArrayList<Color>(n);
-        colors.add(c);
-        for (int i = 1; i < n; i++) {
-            colors.add(colors.get(i - 1).darker());
-        }
-        return new Palette(String.format("darker_%08X", c.getRGB()), colors);
-    }
-
     /**
      * Create a palette from a file in the classpath named `palettes/{name}_palette.txt`. The
      * file should have one color per line in a format supported by `Strings.parseColor`.
@@ -118,18 +100,6 @@ public final class Palette {
 
     public Palette withAlpha(int alpha) {
         return new Palette(name, colors.stream().map(c -> Colors.withAlpha(c, alpha)).collect(Collectors.toList()));
-    }
-
-/*        def withVisionType(vision: VisionType): Palette =
-        Palette(s"${vision.name}_$name", colorArray.map(vision.convert(_)))
-*/
-
-    /**
-     * Convert colors from another palette into grayscale. For information about the conversion
-     * see: http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/.
-     */
-    public Palette asGrayscale() {
-        return new Palette("grayscale_" + name, colors.stream().map(Colors::asGrayscale).collect(Collectors.toList()));
     }
 
     public Iterator<Color> iterator() {

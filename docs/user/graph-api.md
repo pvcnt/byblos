@@ -55,7 +55,6 @@ The below table details query parameters available to customise the image render
 | `no_legend_stats` | boolean | Do not display statistics in the legend | `0` |
 | `axis_per_line` | boolean | Use a different Y-axis for every line | `0` |
 | `only_graph` | boolean | Display an anonymised graph (no legend, no values) | `0` |
-| `vision` | string | Simulate different types of color blindness | `vision` |
 | `layout` | string | Control how components are layed out in the canvas | `canvas` |
 | `stack` |  boolean | Set the default line style to stack | `0` |
 | `l` | string or float | Lower bound for the Y-axis | `auto-style` |

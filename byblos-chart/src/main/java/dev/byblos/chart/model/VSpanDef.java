@@ -49,9 +49,4 @@ public final class VSpanDef implements DataDef {
     public Color color() {
         return color;
     }
-
-    @Override
-    public VSpanDef withColor(Color c) {
-        return new VSpanDef(t1, t2, c, label);
-    }
 }

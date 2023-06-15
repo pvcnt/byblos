@@ -46,9 +46,4 @@ public final class HSpanDef implements DataDef {
     public Color color() {
         return color;
     }
-
-    @Override
-    public HSpanDef withColor(Color c) {
-        return new HSpanDef(v1, v2, c, label);
-    }
 }

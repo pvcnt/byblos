@@ -14,11 +14,6 @@ public final class Colors {
         return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
     }
 
-    public static Color asGrayscale(Color c) {
-        var v = (int) (0.21 * c.getRed() + 0.72 * c.getGreen() + 0.07 * c.getBlue());
-        return new Color(v, v, v, c.getAlpha());
-    }
-
     /**
      * Load a list of colors from a resource file.
      */

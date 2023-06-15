@@ -2,7 +2,6 @@ package dev.byblos.eval.graph;
 
 import dev.byblos.chart.model.Layout;
 import dev.byblos.chart.model.LegendType;
-import dev.byblos.chart.model.VisionType;
 import org.immutables.value.Value;
 
 import java.util.Map;
@@ -37,11 +36,6 @@ public abstract class ImageFlags {
     @Value.Default
     public boolean showOnlyGraph() {
         return false;
-    }
-
-    @Value.Default
-    public VisionType vision() {
-        return VisionType.normal;
     }
 
     public abstract String palette();
