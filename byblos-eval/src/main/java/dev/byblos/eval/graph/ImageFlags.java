@@ -17,11 +17,6 @@ public abstract class ImageFlags {
 
     public abstract int height();
 
-    @Value.Default
-    public double zoom() {
-        return 1.0;
-    }
-
     public abstract Map<Integer, Axis> axes();
 
     @Value.Default

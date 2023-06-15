@@ -109,14 +109,6 @@ public abstract class GraphDef {
     public abstract Optional<String> source();
 
     /**
-     * Return zoom factor to apply as a transform to the image.
-     */
-    @Value.Default
-    public double zoom() {
-        return 1.0;
-    }
-
-    /**
      * Return the title of the graph.
      */
     public abstract Optional<String> title();

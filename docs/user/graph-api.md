@@ -64,7 +64,6 @@ The below table details query parameters available to customise the image render
 | `theme`| string | Theme to use | `light` |
 | `scale` | string | Scale to use for the Y-axis | `linear` |
 | `tick_labels` | string | Mode to use for display Y-axis ticks | `decimal` |
-| `zoom`   | float   | Apply a zoom factor to the image | `1.0` |
 
 Note: Those parameters do not apply if using a non-image output format (e.g., JSON).
 

@@ -85,7 +85,6 @@ public final class GraphConfigFactory {
                 .theme(theme)
                 .layout(request.getFirstParam("layout").map(Layout::fromString).orElse(Layout.CANVAS))
                 .hints(processHints(request.getFirstParam("hints")));
-        request.getFirstParam("zoom").map(Double::parseDouble).ifPresent(builder::zoom);
         request.getFirstParam("vision").map(VisionType::fromString).ifPresent(builder::vision);
         request.getFirstParam("axis_per_line").map(this::asBoolean).ifPresent(builder::axisPerLine);
         request.getFirstParam("no_legend").map(this::asNegatedBoolean).ifPresent(builder::showLegend);

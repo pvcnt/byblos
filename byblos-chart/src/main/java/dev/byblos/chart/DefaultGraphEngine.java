@@ -37,9 +37,6 @@ public final class DefaultGraphEngine extends PngGraphEngine {
         if (config.width() > GraphConstants.MaxWidth) {
             notices.add(String.format("Restricted graph width to %s.", GraphConstants.MaxWidth));
         }
-        if (config.zoom() > GraphConstants.MaxZoom) {
-            notices.add(String.format("Restricted zoom to %s.", GraphConstants.MaxZoom));
-        }
 
         final var aboveCanvas = new ArrayList<Element>();
         config.title().ifPresent(str -> {
@@ -126,13 +123,9 @@ public final class DefaultGraphEngine extends PngGraphEngine {
         var imgWidth = graph.width();
         var imgHeight = height(elements, imgWidth);
 
-        var zoom = Math.min(config.zoom(), GraphConstants.MaxZoom);
-        var zoomWidth = (int) (imgWidth * zoom);
-        var zoomHeight = (int) (imgHeight * zoom);
-        var image = new BufferedImage(zoomWidth, zoomHeight, BufferedImage.TYPE_INT_ARGB);
+        var image = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
         var g = image.createGraphics();
         renderingHints.forEach(g::setRenderingHint);
-        g.scale(zoom, zoom);
         g.setColor(bgColor);
         g.fillRect(0, 0, imgWidth, imgHeight);
 

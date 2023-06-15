@@ -160,7 +160,6 @@ public abstract class GraphConfig {
                 .width(flags().width())
                 .height(flags().height())
                 .layout(flags().layout())
-                .zoom(flags().zoom())
                 .legendType(flags().legendType())
                 .onlyGraph(flags().showOnlyGraph())
                 .themeName(flags().theme())

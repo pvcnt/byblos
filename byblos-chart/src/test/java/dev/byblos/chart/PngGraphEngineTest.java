@@ -169,16 +169,6 @@ abstract class PngGraphEngineTest {
         singleLine("single_line_sqrt", v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.SQRT).build()));
     }
 
-    @Test
-    void singleLineZoom2() throws Exception {
-        singleLine("single_line_zoom_2.0", v -> v.toBuilder().zoom(2.0).build());
-    }
-
-    @Test
-    void singleLineZoom4() throws Exception {
-        singleLine("single_line_zoom_4.0", v -> v.toBuilder().zoom(4.0).build());
-    }
-
     private static List<LineDef> label(LineDef... vs) {
         return label(0, Palette.DEFAULT, vs);
     }
