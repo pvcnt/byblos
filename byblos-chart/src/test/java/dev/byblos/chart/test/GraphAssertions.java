@@ -5,10 +5,16 @@ import dev.byblos.chart.util.PngImage;
 
 import java.awt.image.RenderedImage;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public final class GraphAssertions {
     private final String goldenDir;
+    private final String absoluteGoldenDir;
     private final String targetDir;
     private final BiConsumer<Object, Object> assertFn;
 
@@ -16,6 +22,44 @@ public final class GraphAssertions {
         this.goldenDir = goldenDir;
         this.targetDir = targetDir;
         this.assertFn = assertFn;
+        absoluteGoldenDir = new File(goldenDir).getAbsolutePath();
+    }
+
+    public void generateReport(Class<?> clazz) throws IOException {
+        generateReport(clazz, true);
+    }
+
+    public void generateReport(Class<?> clazz, boolean diffsOnly) throws IOException {
+        var report = "<html><head><title>" + clazz.getSimpleName() + "</title></head>";
+        report += "<body><h1>" + clazz.getSimpleName() + "</h1><hr/>";
+        var dir = new File(targetDir);
+        dir.mkdirs();
+        report += Arrays.stream(dir.listFiles())
+                .filter(f -> f.getName().endsWith(".png"))
+                .filter(f -> !f.getName().startsWith("diff_"))
+                .map(f -> {
+                    var diffImg = new File(targetDir + "/diff_" + f.getName());
+                    if (diffsOnly && !diffImg.isFile()) {
+                        return "";
+                    }
+                    var html = "<div><h2>" + f.getName() + "</h2>";
+                    html += "<table border=\"1\">";
+                    html += "<tr><th>Golden</th><th>Test</th><th>Diff</th></tr>";
+                    html += "<tr valign=\"top\">";
+                    html += "<td><img src=\"" + absoluteGoldenDir + "/" + f.getName() + "\"/></td>";
+                    html += "<td><img src=\"" + f.getName() + "\"/></td>";
+                    if (diffImg.isFile()) {
+                        html += "<td><img src=\"diff_" + f.getName() + "\"/></td>";
+                    } else {
+                        html += "<td></td>";
+                    }
+                    html += "</tr></table></div>";
+                    return html;
+                })
+                .collect(Collectors.joining());
+        report += "</body></html>";
+
+        Files.write(Paths.get(targetDir, "report.html"), report.getBytes(StandardCharsets.UTF_8));
     }
 
     public void assertEquals(PngImage i1, String f) throws IOException {

@@ -12,6 +12,7 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -75,9 +76,9 @@ public final class Ticks {
     );
 
     static final List<Pair<ChronoField, DateTimeFormatter>> timeBoundaries = List.of(
-            new Pair<>(ChronoField.SECOND_OF_MINUTE, DateTimeFormatter.ofPattern(":ss")),
-            new Pair<>(ChronoField.MINUTE_OF_HOUR, DateTimeFormatter.ofPattern("HH:mm")),
-            new Pair<>(ChronoField.HOUR_OF_DAY, DateTimeFormatter.ofPattern("HH:mm"))
+            new Pair<>(ChronoField.SECOND_OF_MINUTE, DateTimeFormatter.ofPattern(":ss", Locale.ROOT)),
+            new Pair<>(ChronoField.MINUTE_OF_HOUR, DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT)),
+            new Pair<>(ChronoField.HOUR_OF_DAY, DateTimeFormatter.ofPattern("HH:mm", Locale.ROOT))
     );
 
     // Major and minor tick sizes for value axis
@@ -89,9 +90,9 @@ public final class Ticks {
             new Pair<>(50, 10)
     );
 
-    static final DateTimeFormatter defaultTimeFmt = DateTimeFormatter.ofPattern("MMMdd");
-    private static final DateTimeFormatter monthTimeFmt = DateTimeFormatter.ofPattern("MMM");
-    private static final DateTimeFormatter yearTimeFmt = DateTimeFormatter.ofPattern("yyyy");
+    static final DateTimeFormatter defaultTimeFmt = DateTimeFormatter.ofPattern("MMMdd", Locale.ROOT);
+    private static final DateTimeFormatter monthTimeFmt = DateTimeFormatter.ofPattern("MMM", Locale.ROOT);
+    private static final DateTimeFormatter yearTimeFmt = DateTimeFormatter.ofPattern("yyyy", Locale.ROOT);
 
     /**
      * Generate value tick marks with approximately `n` major ticks for the range `[s, e]`. Tick

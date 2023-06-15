@@ -14,8 +14,7 @@ import dev.byblos.core.model.ArrayTimeSeq;
 import dev.byblos.core.model.CollectorStats;
 import dev.byblos.core.model.FunctionTimeSeq;
 import dev.byblos.core.model.TimeSeries;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -37,12 +36,7 @@ abstract class ImageGraphEngineTest {
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .build();
     private final String dataDir = "graphengine/data";
-
-    private final String baseDir = SrcPath.forProject("byblos-chart");
-    private final String goldenDir = baseDir + "/src/test/resources/graphengine/" + getClass().getSimpleName();
-    private final String targetDir = baseDir + "/target/" + getClass().getSimpleName();
-
-    private final GraphAssertions graphAssertions = new GraphAssertions(goldenDir, targetDir, Assertions::assertEquals);
+    private static GraphAssertions graphAssertions;
 
     private static final boolean bless = false;
     private static final int step = 60000;
@@ -50,6 +44,20 @@ abstract class ImageGraphEngineTest {
     abstract public String getPrefix();
 
     abstract public ImageGraphEngine graphEngine();
+
+    @BeforeAll
+    static void beforeEach(TestInfo testInfo) {
+        var testClass = testInfo.getTestClass().get();
+        var baseDir = SrcPath.forProject("byblos-chart");
+        var goldenDir = baseDir + "/src/test/resources/graphengine/" + testClass.getSimpleName();
+        var targetDir = baseDir + "/target/" + testClass.getSimpleName();
+        graphAssertions = new GraphAssertions(goldenDir, targetDir, Assertions::assertEquals);
+    }
+
+    @AfterAll
+    static void afterAll(TestInfo testInfo) throws IOException {
+        graphAssertions.generateReport(testInfo.getTestClass().get());
+    }
 
     @Test
     void nonUniformlyDrawnSpikes() throws Exception {
@@ -101,7 +109,7 @@ abstract class ImageGraphEngineTest {
 
     @Test
     void singleLineOnlyGraph() throws Exception {
-        singleLine("single_line_only_graph", v -> v.toBuilder().onlyGraph(false).build());
+        singleLine("single_line_only_graph", v -> v.toBuilder().onlyGraph(true).build());
     }
 
     @Test
