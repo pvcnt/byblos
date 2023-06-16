@@ -63,10 +63,6 @@ public abstract class GraphConfig {
 
     public abstract String uri();
 
-    public boolean shouldOutputImage() {
-        return "png".equals(format());
-    }
-
     public GraphEngine engine() {
         var engine = settings().engines().get(format());
         if (null == engine) {

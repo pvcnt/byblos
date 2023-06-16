@@ -9,7 +9,6 @@ import com.google.common.io.Resources;
 import dev.byblos.chart.model.*;
 import dev.byblos.chart.test.GraphAssertions;
 import dev.byblos.chart.test.SrcPath;
-import dev.byblos.chart.util.PngImage;
 import dev.byblos.core.model.ArrayTimeSeq;
 import dev.byblos.core.model.CollectorStats;
 import dev.byblos.core.model.FunctionTimeSeq;
@@ -61,7 +60,7 @@ abstract class ImageGraphEngineTest {
 
     @Test
     void nonUniformlyDrawnSpikes() throws Exception {
-        var name = getPrefix() + "_non_uniformly_drawn_spikes.png";
+        var name = getPrefix() + "_non_uniformly_drawn_spikes." + graphEngine().name();
         var dataFileName = getPrefix() + "_non_uniformly_drawn_spikes.json";
 
         var graphDef = load(dataDir + "/" + dataFileName).toBuilder().width(700).build();
@@ -85,7 +84,7 @@ abstract class ImageGraphEngineTest {
                 .addWarnings("Something really bad happened.")
                 .build();
 
-        var name = getPrefix() + "_notices.png";
+        var name = getPrefix() + "_notices." + graphEngine().name();
         check(name, graphDef);
     }
 
@@ -247,7 +246,7 @@ abstract class ImageGraphEngineTest {
                 .themeName("light")
                 .build();
 
-        var fname = getPrefix() + "_" + name + ".png";
+        var fname = getPrefix() + "_" + name + "." + graphEngine().name();
         check(fname, f.apply(graphDef));
     }
 
@@ -281,7 +280,7 @@ abstract class ImageGraphEngineTest {
         // var json = JsonCodec.encode(graphDef);
         // assertEquals(graphDef.normalize, JsonCodec.decode(json).normalize);
 
-        var image = new PngImage(graphEngine().createImage(graphDef), Map.of());
+        var image = graphEngine().createImage(graphDef).withMetadata(Map.of());
         graphAssertions.assertEquals(image, name, bless);
     }
 

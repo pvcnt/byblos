@@ -41,12 +41,12 @@ public final class GraphResource {
     @GetMapping("/api/v1/graph")
     public ResponseEntity<?> graph() {
         var requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        var request = createGraphRequest(requestAttributes.getRequest());
+        var request = toGraphRequest(requestAttributes.getRequest());
         var config = configFactory.toGraphConfig(request);
         return toResponse(grapher.evalAndRender(config));
     }
 
-    private static GraphRequest createGraphRequest(HttpServletRequest httpRequest) {
+    private static GraphRequest toGraphRequest(HttpServletRequest httpRequest) {
         var headers = ImmutableMultimap.<String, String>builder();
         httpRequest.getHeaderNames().asIterator().forEachRemaining(k -> {
             var lowerKey = k.toLowerCase(Locale.ROOT);
@@ -63,20 +63,25 @@ public final class GraphResource {
     }
 
     private static ResponseEntity<?> toResponse(GraphResult result) {
-        var status = switch (result.code()) {
+        return ResponseEntity.status(getHttpStatus(result))
+                .contentType(getContentType(result))
+                .body(result.data());
+    }
+
+    private static HttpStatus getHttpStatus(GraphResult result) {
+        if (result.config().engine().shouldOutputImage()) {
+            // Even in the face of an error, we always return a 200 response
+            // to the user when an image is expected.
+            return HttpStatus.OK;
+        }
+        return switch (result.code()) {
             case OK -> HttpStatus.OK;
             case USER_ERROR -> HttpStatus.BAD_REQUEST;
             case SYSTEM_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
-        if (status == HttpStatus.OK || result.data().length > 0) {
-            // When viewing a page in a browser an error response is not rendered. To make it
-            // clearer to the user we return a 200 with the error information encoded into an image.
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(result.config().contentType()))
-                    .body(result.data());
-        }
-        return ResponseEntity.status(status)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of("message", result.message().orElse("Unknown error")));
+    }
+
+    private static MediaType getContentType(GraphResult result) {
+        return MediaType.parseMediaType(result.config().contentType());
     }
 }

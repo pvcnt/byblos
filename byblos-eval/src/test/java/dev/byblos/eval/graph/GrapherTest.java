@@ -26,11 +26,11 @@ public class GrapherTest {
     @Test
     void emptyQueryMustRenderError() {
         var flags = ImmutableImageFlags.builder().width(600).height(400).palette("armytage").theme("light").build();
-        var config = ImmutableGraphConfig.builder().query("").flags(flags).uri("").settings(defaultSettings).build();
+        var config = ImmutableGraphConfig.builder().query("").flags(flags).uri("").settings(defaultSettings).format("csv").build();
 
         var result = grapher.evalAndRender(config);
 
         assertThat(result.code()).isEqualTo(GraphResult.Code.USER_ERROR);
-        assertThat(result.message()).contains("expression generated no lines");
+        assertThat(new String(result.data())).contains("expression generated no lines");
     }
 }

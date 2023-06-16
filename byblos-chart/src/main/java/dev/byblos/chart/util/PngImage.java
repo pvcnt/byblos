@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public final class PngImage {
+public record PngImage(RenderedImage data, Map<String, String> metadata) implements Image {
 
     static {
         // Disable using on-disk cache for images. Avoids temp files on shared services.
@@ -33,22 +33,12 @@ public final class PngImage {
     // get reliable image comparisons.
     public static boolean useAntiAliasing = true;
 
-    private final RenderedImage data;
-    private final Map<String, String> metadata;
-
-    public PngImage(RenderedImage data, Map<String, String> metadata) {
-        this.data = data;
-        this.metadata = metadata;
+    @Override
+    public PngImage toPngImage() {
+        return this;
     }
 
-    public RenderedImage data() {
-        return data;
-    }
-
-    public Map<String, String> metadata() {
-        return metadata;
-    }
-
+    @Override
     public PngImage withMetadata(Map<String, String> metadata) {
         return new PngImage(data, metadata);
     }
@@ -202,17 +192,7 @@ public final class PngImage {
                 .collect(Collectors.toMap(n -> n.getAttribute("keyword"), n -> n.getAttribute("value")));
     }
 
-    public byte[] toByteArray() {
-        var buffer = new ByteArrayOutputStream();
-        try {
-            write(buffer);
-            return buffer.toByteArray();
-        } catch (IOException e) {
-            // No reason for this to happen, we write to a byte array.
-            throw new RuntimeException(e);
-        }
-    }
-
+    @Override
     public void write(OutputStream output) throws IOException {
         var iterator = ImageIO.getImageWritersBySuffix("png");
         checkState(iterator.hasNext(), "no image writers for png");

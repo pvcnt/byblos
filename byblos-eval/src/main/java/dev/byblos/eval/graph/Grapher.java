@@ -1,14 +1,13 @@
 package dev.byblos.eval.graph;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
 import dev.byblos.chart.Colors;
+import dev.byblos.chart.graphics.Dimensions;
 import dev.byblos.chart.model.*;
-import dev.byblos.chart.util.PngImage;
+import dev.byblos.chart.util.Throwables;
 import dev.byblos.core.model.*;
-import dev.byblos.core.stacklang.InvalidSyntaxException;
 import dev.byblos.eval.db.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,34 +56,25 @@ public final class Grapher {
         }
     }
 
-    private GraphResult createErrorResult(GraphConfig config, Throwable e) {
-        var userError = isUserError(e);
+    private GraphResult createErrorResult(GraphConfig config, Throwable t) {
+        var userError = Throwables.isUserError(t);
         if (!userError) {
-            LOGGER.error("Error while rendering graph", e);
+            LOGGER.error("Error while rendering graph", t);
         }
         var data = new byte[0];
-        if (config.browser() && config.shouldOutputImage()) {
-            var pngImage = createErrorImage(e, config.flags().width(), config.flags().height());
-            data = pngImage.toByteArray();
+        try {
+            data = createErrorImage(t, config);
+        } catch (IOException e) {
+            LOGGER.error("Error while rendering error", e);
         }
-        if (userError) {
-            return GraphResult.userError(config, data, e.getMessage());
-        }
-        return GraphResult.systemError(config, data, "Internal error");
-
+        return userError ? GraphResult.userError(config, data) : GraphResult.systemError(config, data);
     }
 
-    private PngImage createErrorImage(Throwable t, int w, int h) {
-        var simpleName = t.getClass().getSimpleName();
-        var msg = String.format("%s: %s", simpleName, t.getMessage());
-        if (isUserError(t)) {
-            return PngImage.userError(msg, w, h);
-        }
-        return PngImage.systemError(msg, w, h);
-    }
-
-    private static boolean isUserError(Throwable t) {
-        return (t instanceof IllegalArgumentException || t instanceof IllegalStateException || t instanceof JsonProcessingException || t instanceof InvalidSyntaxException);
+    private byte[] createErrorImage(Throwable t, GraphConfig config) throws IOException {
+        var dims = new Dimensions(config.flags().width(), config.flags().height());
+        var baos = new ByteArrayOutputStream();
+        config.engine().writeError(t, dims, baos);
+        return baos.toByteArray();
     }
 
     private GraphResult evalAndRender(GraphConfig config, Multimap<DataExpr, TimeSeries> data) throws IOException {
@@ -94,7 +84,7 @@ public final class Grapher {
             throw new IllegalStateException("expression generated no lines");
         }
         var baos = new ByteArrayOutputStream();
-        config.engine().write(graphDef, baos);
+        config.engine().writeGraph(graphDef, baos);
         return GraphResult.ok(config, baos.toByteArray());
     }
 

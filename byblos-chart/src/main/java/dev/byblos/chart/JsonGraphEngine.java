@@ -2,8 +2,10 @@ package dev.byblos.chart;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import dev.byblos.chart.graphics.Dimensions;
 import dev.byblos.chart.model.GraphDef;
 import dev.byblos.chart.model.LineDef;
+import dev.byblos.chart.util.Throwables;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,7 +13,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Base class for all graph engines producing JSON.
@@ -35,10 +36,26 @@ abstract class JsonGraphEngine implements GraphEngine {
     }
 
     @Override
-    public final void write(GraphDef config, OutputStream output) throws IOException {
+    public final boolean shouldOutputImage() {
+        return false;
+    }
+
+    @Override
+    public final void writeGraph(GraphDef config, OutputStream output) throws IOException {
         var writer = new OutputStreamWriter(output, StandardCharsets.UTF_8);
         var gen = jsonFactory.createGenerator(writer);
         write(config, gen);
+        gen.flush();
+    }
+
+    @Override
+    public void writeError(Throwable t, Dimensions dims, OutputStream output) throws IOException {
+        var writer = new OutputStreamWriter(output, StandardCharsets.UTF_8);
+        var gen = jsonFactory.createGenerator(writer);
+        gen.writeStartObject();
+        gen.writeStringField("code", Throwables.isUserError(t) ? "USER_ERROR" : "SYSTEM_ERROR");
+        gen.writeStringField("message", Throwables.getHumanReadableErrorMessage(t));
+        gen.writeEndObject();
         gen.flush();
     }
 
@@ -62,7 +79,7 @@ abstract class JsonGraphEngine implements GraphEngine {
         gen.writeArrayFieldStart("metrics");
         for (var line : lines) {
             gen.writeStartObject();
-            var tags = line.data().tags().entrySet().stream().sorted(Map.Entry.comparingByKey()).collect(Collectors.toList());
+            var tags = line.data().tags().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList();
             for (var tag : tags) {
                 gen.writeStringField(tag.getKey(), tag.getValue());
             }

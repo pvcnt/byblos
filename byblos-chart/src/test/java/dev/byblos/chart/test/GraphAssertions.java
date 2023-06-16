@@ -1,9 +1,9 @@
 package dev.byblos.chart.test;
 
 import dev.byblos.chart.util.Fonts;
+import dev.byblos.chart.util.Image;
 import dev.byblos.chart.util.PngImage;
 
-import java.awt.image.RenderedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -62,8 +62,8 @@ public final class GraphAssertions {
         Files.write(Paths.get(targetDir, "report.html"), report.getBytes(StandardCharsets.UTF_8));
     }
 
-    public void assertEquals(PngImage i1, String f) throws IOException {
-        assertEquals(i1, f, false);
+    public void assertEquals(Image i1, String f, boolean bless) throws IOException {
+        assertEquals(i1.toPngImage(), f, bless);
     }
 
     public void assertEquals(PngImage i1, String f, boolean bless) throws IOException {
@@ -94,20 +94,16 @@ public final class GraphAssertions {
         } else {
             new File(targetDir + "/diff_" + f).delete();
         }
-        assertEquals(i1, i2);
+        assertEquals(i1.toPngImage(), i2);
     }
 
     private void assertEquals(PngImage i1, PngImage i2) {
-        assertEquals(i1.data(), i2.data());
+        var diff = PngImage.diff(i1.data(), i2.data());
+        assertFn.accept(diff.metadata().get("identical"), "true");
         assertFn.accept(i1.metadata(), i2.metadata());
     }
 
-    private void assertEquals(RenderedImage i1, RenderedImage i2) {
-        var diff = PngImage.diff(i1, i2);
-        assertFn.accept(diff.metadata().get("identical"), "true");
-    }
-
-    private void blessImage(PngImage img, String f) throws IOException {
+    private void blessImage(Image img, String f) throws IOException {
         writeImage(img, goldenDir, f);
     }
 
@@ -119,10 +115,11 @@ public final class GraphAssertions {
         return new FileInputStream(goldenDir + "/" + file);
     }
 
-    private void writeImage(PngImage img, String dir, String f) throws IOException {
-        var file = new File(new File(dir), f);
-        file.getParentFile().mkdirs();
-        var stream = new FileOutputStream(file);
-        img.write(stream);
+    private void writeImage(Image img, String dir, String f) throws IOException {
+        var file = Paths.get(dir, f);
+        Files.createDirectories(file.getParent());
+        try (var stream = new FileOutputStream(file.toFile())) {
+            img.write(stream);
+        }
     }
 }

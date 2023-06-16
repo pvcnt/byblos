@@ -1,6 +1,8 @@
 package dev.byblos.chart;
 
+import dev.byblos.chart.graphics.Dimensions;
 import dev.byblos.chart.model.GraphDef;
+import dev.byblos.chart.util.Throwables;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,7 +34,12 @@ abstract class CsvGraphEngine implements GraphEngine {
     }
 
     @Override
-    public final void write(GraphDef config, OutputStream output) throws IOException {
+    public boolean shouldOutputImage() {
+        return false;
+    }
+
+    @Override
+    public final void writeGraph(GraphDef config, OutputStream output) throws IOException {
         var lines = config.plots().stream().flatMap(p -> p.lines().stream()).toList();
         var writer = new OutputStreamWriter(output, StandardCharsets.UTF_8);
         writer.append("\"timestamp\"");
@@ -55,6 +62,13 @@ abstract class CsvGraphEngine implements GraphEngine {
             writer.append("\n");
             timestamp += step;
         }
+        writer.flush();
+    }
+
+    @Override
+    public final void writeError(Throwable t, Dimensions dims, OutputStream output) throws IOException {
+        var writer = new OutputStreamWriter(output, StandardCharsets.UTF_8);
+        writer.write(Throwables.getHumanReadableErrorMessage(t));
         writer.flush();
     }
 }

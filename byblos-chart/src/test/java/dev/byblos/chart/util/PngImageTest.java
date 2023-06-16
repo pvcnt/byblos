@@ -3,6 +3,7 @@ package dev.byblos.chart.util;
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -57,8 +58,9 @@ public class PngImageTest {
         );
         var img = PngImage.error("test", 100, 100).withMetadata(metadata);
 
-        var bytes = img.toByteArray();
-        var decoded = PngImage.fromBytes(bytes);
+        var baos = new ByteArrayOutputStream();
+        img.write(baos);
+        var decoded = PngImage.fromBytes(baos.toByteArray());
 
         assertEquals(metadata, decoded.metadata());
     }

@@ -1,5 +1,6 @@
 package dev.byblos.chart;
 
+import dev.byblos.chart.graphics.Dimensions;
 import dev.byblos.chart.model.GraphDef;
 
 import java.io.IOException;
@@ -10,5 +11,9 @@ public interface GraphEngine {
 
     String contentType();
 
-    void write(GraphDef config, OutputStream output) throws IOException;
+    boolean shouldOutputImage();
+
+    void writeGraph(GraphDef config, OutputStream output) throws IOException;
+
+    void writeError(Throwable t, Dimensions dims, OutputStream output) throws IOException;
 }
