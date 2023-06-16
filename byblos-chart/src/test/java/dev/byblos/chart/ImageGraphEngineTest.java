@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.google.common.base.Functions;
 import com.google.common.io.Resources;
 import dev.byblos.chart.model.*;
 import dev.byblos.chart.test.GraphAssertions;
@@ -17,10 +18,7 @@ import org.junit.jupiter.api.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -176,6 +174,207 @@ abstract class ImageGraphEngineTest {
         singleLine("single_line_sqrt", v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.SQRT).build()));
     }
 
+    @Test
+    void singleLineNoTickLabels() throws Exception {
+        singleLine("single_line_no_tick_labels", v -> v.adjustPlots(x -> x.toBuilder().tickLabelMode(TickLabelMode.OFF).build()));
+    }
+
+    @Test
+    void singleLineLayoutImage() throws Exception {
+        singleLine("single_line_layout_image", v -> v.toBuilder().layout(Layout.IMAGE).build());
+    }
+
+    @Test
+    void singleLineLayoutImageHeight() throws Exception {
+        singleLine("single_line_layout_ih", v -> v.toBuilder().layout(Layout.IMAGE_HEIGHT).build());
+    }
+
+    @Test
+    void singleLineLayoutImageWidth() throws Exception {
+        singleLine("single_line_layout_iw", v -> v.toBuilder().layout(Layout.IMAGE_WIDTH).build());
+    }
+
+    @Test
+    void singleLineLayoutImageWidth50() throws Exception {
+        singleLine("single_line_layout_iw_50", v -> v.toBuilder().layout(Layout.IMAGE_WIDTH).width(50).build());
+    }
+
+    @Test
+    void singleLineLayoutImageWidth100() throws Exception {
+        singleLine("single_line_layout_iw_100", v -> v.toBuilder().layout(Layout.IMAGE_WIDTH).width(100).build());
+    }
+
+    @Test
+    void singleLineLayoutImageWidth1000() throws Exception {
+        singleLine("single_line_layout_iw_1000", v -> v.toBuilder().layout(Layout.IMAGE_WIDTH).width(1000).build());
+    }
+
+    @Test
+    void singleLineLayoutImageWidth10000() throws Exception {
+        singleLine("single_line_layout_iw_10000", v -> v.toBuilder().layout(Layout.IMAGE_WIDTH).width(10_000).build());
+    }
+
+    @Test
+    void singleLineTimezone() throws Exception {
+        singleLine("single_line_timezone",
+                v -> v.toBuilder().timezones(List.of(ZoneId.of("US/Pacific"))).build());
+    }
+
+    @Test
+    void singleLineTimezonesAB() throws Exception {
+        var timezones = List.of(ZoneId.of("US/Pacific"), ZoneId.of("UTC"));
+        singleLine("single_line_timezones_ab", v -> v.toBuilder().timezones(timezones).build());
+    }
+
+    @Test
+    void singleLineTimezonesBA() throws Exception {
+        var timezones = List.of(ZoneId.of("UTC"), ZoneId.of("US/Pacific"));
+        singleLine("single_line_timezones_ba", v -> v.toBuilder().timezones(timezones).build());
+    }
+
+    @Test
+    void singleLineTimezonesMany() throws Exception {
+        var timezones = List.of(
+                ZoneId.of("US/Pacific"),
+                ZoneId.of("UTC"),
+                ZoneId.of("Europe/Berlin"),
+                ZoneId.of("Australia/Eucla"));
+        singleLine("single_line_timezones_many", v -> v.toBuilder().timezones(timezones).build());
+    }
+
+    @Test
+    void singleLineLongLabel() throws Exception {
+        var longLabel = "A long ylabel that should cause it to wrap when displayed on the chart. Some more text to" +
+                " ensure that it will wrap when showing in the legend.";
+        singleLine("single_line_ylabel_wrap", v -> v.adjustPlots(x -> x.toBuilder().yLabel(longLabel).build()));
+    }
+
+    @Test
+    void singleLineLogNegative() throws Exception {
+        lines("single_line_log_negative",
+                List.of(-400d),
+                v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.LOGARITHMIC).build()));
+    }
+
+    @Test
+    void singleLineLogLarge() throws Exception {
+        lines("single_line_log_large",
+                List.of(4.123e9),
+                v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.LOGARITHMIC).build()));
+    }
+
+    @Test
+    void singleLinePowerNegative() throws Exception {
+        lines("single_line_power_negative",
+                List.of(-400d),
+                v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.POWER_2).build()));
+    }
+
+    @Test
+    void singleLinePowerLarge() throws Exception {
+        lines("single_line_power_large",
+                List.of(4.123e9),
+                v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.POWER_2).build()));
+    }
+
+    @Test
+    void singleLineSqrtNegative() throws Exception {
+        lines("single_line_sqrt_negative",
+                List.of(-400d),
+                v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.SQRT).build()));
+    }
+
+    @Test
+    void singleLineSqrtLarge() throws Exception {
+        lines("single_line_sqrt_large",
+                List.of(4.123e9),
+                v -> v.adjustPlots(x -> x.toBuilder().scale(Scale.SQRT).build()));
+    }
+
+    @Test
+    void singleLineStackNegative() throws Exception {
+        lines("single_line_stack_negative",
+                List.of(-400d),
+                v -> v.adjustLines(x -> x.toBuilder().lineStyle(LineStyle.STACK).build()));
+    }
+
+    @Test
+    void singleLine50() throws Exception {
+        lines("single_line_50", IntStream.range(1, 51).mapToObj(v -> (double) v).toList(), Functions.identity());
+    }
+
+    @Test
+    void constantLineLowerBound0() throws Exception {
+        constantLine("lower_bound_0", List.of(0d), v -> v.adjustPlots(x -> x.toBuilder().lower(new ExplicitBound(0)).build()));
+    }
+
+    @Test
+    void constantLineLowerBound4() throws Exception {
+        constantLine("lower_bound_4", List.of(4d), v -> v.adjustPlots(x -> x.toBuilder().lower(new ExplicitBound(4)).build()));
+    }
+
+    @Test
+    void constantLineStack() throws Exception {
+        constantLine("stack", List.of(0d), v -> v.adjustLines(x -> x.toBuilder().lineStyle(LineStyle.STACK).build()));
+    }
+
+    @Test
+    void constantLineArea() throws Exception {
+        constantLine("area", List.of(0d), v -> v.adjustLines(x -> x.toBuilder().lineStyle(LineStyle.AREA).build()));
+    }
+
+    @Test
+    void constantLineStackAuto() throws Exception {
+        constantLine("stack_auto", List.of(200d, 100d), v -> v
+                .adjustPlots(x -> x.toBuilder().lower(AutoDataBound.INSTANCE).build())
+                .adjustLines(x -> x.toBuilder().lineStyle(LineStyle.STACK).build()));
+    }
+
+    @Test
+    void constantLineL1U2h300() throws Exception {
+        constantLine("l1_u2_h300", List.of(1d), v -> v.toBuilder().height(300).build());
+    }
+
+    @Test
+    void constantLinePositiveInfinity() throws Exception {
+        constantLine("positive_infinity", List.of(Double.POSITIVE_INFINITY), Functions.identity());
+    }
+
+    @Test
+    void constantLineNegativeInfinity() throws Exception {
+        constantLine("negative_infinity", List.of(Double.NEGATIVE_INFINITY), Functions.identity());
+    }
+
+    @Test
+    void constantLineDoubleMax() throws Exception {
+        constantLine("double_max", List.of(Double.MAX_VALUE), Functions.identity());
+    }
+
+    @Test
+    void constantLineDoubleMin() throws Exception {
+        constantLine("double_min", List.of(-Double.MAX_VALUE), Functions.identity());
+    }
+
+    @Test
+    void constantLineDoubleMinPositive() throws Exception {
+        constantLine("double_min_positive", List.of(Double.MIN_VALUE), Functions.identity());
+    }
+
+    @Test
+    void constantLineDoubleMinZero() throws Exception {
+        constantLine("double_min_zero", List.of(Double.MIN_VALUE, 0d), Functions.identity());
+    }
+
+    @Test
+    void constantLineDoubleLarge() throws Exception {
+        constantLine("double_large", List.of(1.234e28, 7.85e23), Functions.identity());
+    }
+
+    @Test
+    void constantLineDoubleSmall() throws Exception {
+        constantLine("double_small", List.of(1.234e-28, 7.85e-23), Functions.identity());
+    }
+
     private static List<LineDef> label(LineDef... vs) {
         return label(0, Palette.DEFAULT, vs);
     }
@@ -231,7 +430,7 @@ abstract class ImageGraphEngineTest {
         return simpleSeriesDef(0, max);
     }
 
-    private static LineDef constantSeriesDef(double value) {
+    private LineDef constantSeriesDef(double value) {
         return ImmutableLineDef.builder().data(constant(value)).build();
     }
 
@@ -252,6 +451,22 @@ abstract class ImageGraphEngineTest {
 
     private void singleLine(String name, Function<GraphDef, GraphDef> f) throws IOException {
         lines(name, List.of(400d), f);
+    }
+
+    private void constantLine(String name, List<Double> vs, Function<GraphDef, GraphDef> f) throws IOException {
+        var testName = "constant_line_" + name;
+        var series = vs.stream().map(this::constantSeriesDef).toList();
+        var plotDef = ImmutablePlotDef.builder().data(label(series)).build();
+
+        var graphDef = ImmutableGraphDef.builder()
+                .startTime(ZonedDateTime.of(2012, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant())
+                .endTime(ZonedDateTime.of(2012, 1, 2, 0, 0, 0, 0, ZoneOffset.UTC).toInstant())
+                .addPlots(plotDef)
+                .themeName("light")
+                .build();
+
+        var fname = getPrefix() + "_" + testName + "." + graphEngine().name();
+        check(fname, f.apply(graphDef));
     }
 
     private static GraphDef load(String resource) throws Exception {
