@@ -11,7 +11,6 @@ import dev.byblos.chart.model.*;
 import dev.byblos.chart.test.GraphAssertions;
 import dev.byblos.chart.test.SrcPath;
 import dev.byblos.core.model.ArrayTimeSeq;
-import dev.byblos.core.model.CollectorStats;
 import dev.byblos.core.model.FunctionTimeSeq;
 import dev.byblos.core.model.TimeSeries;
 import org.junit.jupiter.api.*;
@@ -92,16 +91,8 @@ abstract class ImageGraphEngineTest {
     }
 
     @Test
-    void singleLineWithStats() throws Exception {
-        singleLine(
-                "single_line_with_stats",
-                v -> v.toBuilder().stats(new CollectorStats(1, 2, 3, 4)).loadTime(5123L).build()
-        );
-    }
-
-    @Test
-    void singleLineWithLoadTime() throws Exception {
-        singleLine("single_line_with_load_time", v -> v.toBuilder().loadTime(5123L).build());
+    void singleLineWithFetchTime() throws Exception {
+        singleLine("single_line_with_fetch_time", v -> v.toBuilder().fetchTime(Duration.ofMillis(5123)).build());
     }
 
     @Test

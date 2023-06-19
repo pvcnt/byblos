@@ -1,5 +1,6 @@
 package dev.byblos.eval.graph;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.*;
 import java.util.function.Function;
@@ -47,10 +49,12 @@ public final class Grapher {
                     .distinct()
                     .toList();
             var result = ImmutableListMultimap.<DataExpr, TimeSeries>builder();
+            var stopWatch = Stopwatch.createStarted();
             for (var expr : dataExprs) {
                 result.putAll(expr, database.execute(config.evalContext(), expr));
             }
-            return evalAndRender(config, result.build());
+            stopWatch.stop();
+            return evalAndRender(config, stopWatch.elapsed(), result.build());
         } catch (Exception e) {
             return createErrorResult(config, e);
         }
@@ -77,8 +81,8 @@ public final class Grapher {
         return baos.toByteArray();
     }
 
-    private GraphResult evalAndRender(GraphConfig config, Multimap<DataExpr, TimeSeries> data) throws IOException {
-        var graphDef = create(config, e -> e.expr().eval(config.evalContext(), data));
+    private GraphResult evalAndRender(GraphConfig config, Duration fetchTime, Multimap<DataExpr, TimeSeries> data) throws IOException {
+        var graphDef = create(config, fetchTime, e -> e.expr().eval(config.evalContext(), data));
         if (graphDef.numLines() == 0) {
             // Do not draw an empty graph. "q" is a required parameter.
             throw new IllegalStateException("expression generated no lines");
@@ -91,7 +95,7 @@ public final class Grapher {
     /**
      * Create a new graph definition based on the specified config and data.
      */
-    private GraphDef create(GraphConfig config, Function<StyleExpr, ResultSet> eval) {
+    private GraphDef create(GraphConfig config, Duration fetchTime, Function<StyleExpr, ResultSet> eval) {
         var warnings = ImmutableList.<String>builder();
 
         var plotExprs = config.parsedQuery().stream().collect(Collectors.groupingBy(e -> e.axis().orElse(0)));
@@ -107,7 +111,7 @@ public final class Grapher {
                     return createPlot(config, eval, axis, e.getValue(), graphPalette, multiY, warnings);
                 })
                 .collect(Collectors.toList());
-        return config.newGraphDef(plots, warnings.build());
+        return config.newGraphDef(plots, fetchTime, warnings.build());
     }
 
     private PlotDef createPlot(GraphConfig config, Function<StyleExpr, ResultSet> eval, Axis axis, List<StyleExpr> exprs, Function<String, Color> graphPalette, boolean multiY, ImmutableList.Builder<String> warnings) {

@@ -12,6 +12,7 @@ import dev.byblos.core.util.Step;
 import dev.byblos.core.util.Strings;
 import org.immutables.value.Value;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
@@ -143,7 +144,7 @@ public abstract class GraphConfig {
         return finalTimeRange().second().toEpochMilli() + stepSize();
     }
 
-    public GraphDef newGraphDef(List<PlotDef> plots, List<String> warnings) {
+    public GraphDef newGraphDef(List<PlotDef> plots, Duration fetchTime, List<String> warnings) {
         var timeRange = finalTimeRange();
         var graphTags = Axis.getAxisTags(plots.stream().flatMap(p -> p.data().stream()).collect(Collectors.toList()));
         var title = flags().title().map(s -> Strings.substitute(s, graphTags));
@@ -160,6 +161,7 @@ public abstract class GraphConfig {
                 .onlyGraph(flags().showOnlyGraph())
                 .themeName(flags().theme())
                 .plots(plots)
+                .fetchTime(fetchTime)
                 .source(settings().metadataEnabled() ? Optional.of(uri()) : Optional.empty())
                 .warnings(warnings)
                 .renderingHints(flags().hints())

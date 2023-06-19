@@ -154,24 +154,10 @@ abstract class ImageGraphEngine implements GraphEngine {
             belowCanvas.add(new HorizontalPadding(15));
             belowCanvas.add(Text.left(comment, ChartSettings.smallFont, config.theme().legend().text()));
 
-            if (config.loadTime() > 0 && config.stats().inputLines() > 0) {
-                var graphLines = config.plots().stream().mapToInt(p -> p.data().size()).sum();
-                var graphDatapoints = graphLines * ((end - start) / (config.step() / 1000) + 1);
-                var stats = String.format(
-                        "Fetch: %sms (L: %s, %s, %s; D: %s, %s, %s)",
-                        config.loadTime(),
-                        format(config.stats().inputLines()),
-                        format(config.stats().outputLines()),
-                        format(graphLines),
-                        format(config.stats().inputDatapoints()),
-                        format(config.stats().outputDatapoints()),
-                        format(graphDatapoints)
-                );
+            config.fetchTime().ifPresent(fetchTime -> {
+                var stats = String.format("Fetch: %sms", fetchTime.toMillis());
                 belowCanvas.add(Text.left(stats, ChartSettings.smallFont, config.theme().legend().text()));
-            } else if (config.loadTime() > 0) {
-                var stats = String.format("Fetch: %sms", config.loadTime());
-                belowCanvas.add(Text.left(stats, ChartSettings.smallFont, config.theme().legend().text()));
-            }
+            });
         }
 
         if (!notices.isEmpty() && config.showText()) {

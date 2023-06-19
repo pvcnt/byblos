@@ -5,9 +5,6 @@ import dev.byblos.chart.model.GraphDef;
 import dev.byblos.chart.model.LineDef;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,23 +48,16 @@ public final class StdJsonGraphEngine extends JsonGraphEngine {
     }
 
     private void writeCollectorStats(GraphDef config, JsonGenerator gen) throws IOException {
-        if (config.stats().inputLines() <= 0) {
-            return;
-        }
         var start = config.startTime().toEpochMilli() / 1000;
         var end = config.endTime().toEpochMilli() / 1000;
         var graphLines = config.plots().stream().mapToInt(p -> p.data().size()).sum();
         var graphDatapoints = graphLines * ((end - start) / (config.step() / 1000) + 1);
 
         gen.writeObjectFieldStart("explain");
-        gen.writeNumberField("dataFetchTime", config.loadTime());
-
-        gen.writeNumberField("inputLines", config.stats().inputLines());
-        gen.writeNumberField("intermediateLines", config.stats().outputLines());
+        if (config.fetchTime().isPresent()) {
+            gen.writeNumberField("fetchTime", config.fetchTime().get().toMillis());
+        }
         gen.writeNumberField("graphLines", graphLines);
-
-        gen.writeNumberField("inputDatapoints", config.stats().inputDatapoints());
-        gen.writeNumberField("intermediateDatapoints", config.stats().outputDatapoints());
         gen.writeNumberField("graphDatapoints", graphDatapoints);
         gen.writeEndObject();
     }

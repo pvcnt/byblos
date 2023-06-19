@@ -3,11 +3,11 @@ package dev.byblos.chart.model;
 import dev.byblos.chart.GraphConstants;
 import dev.byblos.chart.graphics.ChartSettings;
 import dev.byblos.chart.graphics.Theme;
-import dev.byblos.core.model.CollectorStats;
 import dev.byblos.core.model.SummaryStats;
 import org.immutables.value.Value;
 
 import java.awt.*;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -114,20 +114,9 @@ public abstract class GraphDef {
     public abstract Optional<String> title();
 
     /**
-     * Return how long it took to load the data for the chart in milliseconds.
+     * Return how long it took to load the data for the chart.
      */
-    @Value.Default
-    public long loadTime() {
-        return -1;
-    }
-
-    /**
-     * Return stats on how much data was processed to render the chart.
-     */
-    @Value.Default
-    public CollectorStats stats() {
-        return CollectorStats.EMPTY;
-    }
+    public abstract Optional<Duration> fetchTime();
 
     /**
      * Return warnings to display to the user.
