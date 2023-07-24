@@ -3,11 +3,11 @@ package dev.byblos.webapi;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
-import dev.byblos.core.model.Expr;
-import dev.byblos.core.model.StyleExpr;
-import dev.byblos.core.model.TypeUtils;
-import dev.byblos.core.stacklang.*;
-import dev.byblos.core.util.Strings;
+import dev.byblos.model.Expr;
+import dev.byblos.model.StyleExpr;
+import dev.byblos.model.TypeUtils;
+import dev.byblos.stacklang.*;
+import dev.byblos.util.Strings;
 import dev.byblos.eval.graph.DefaultSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static dev.byblos.core.model.TypeUtils.isPresentationType;
+import static dev.byblos.model.TypeUtils.isPresentationType;
 
 @Controller
 public final class ExprResource {

@@ -1,7 +1,7 @@
 package dev.byblos.webapi;
 
 import com.google.common.collect.ImmutableMultimap;
-import dev.byblos.core.util.Strings;
+import dev.byblos.util.Strings;
 import dev.byblos.eval.graph.GraphConfigFactory;
 import dev.byblos.eval.graph.GraphRequest;
 import dev.byblos.eval.graph.GraphResult;

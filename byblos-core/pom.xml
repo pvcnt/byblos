@@ -23,6 +23,14 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.iep</groupId>
+            <artifactId>iep-service</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.netflix.iep</groupId>
             <artifactId>iep-dynconfig</artifactId>
         </dependency>
@@ -30,6 +38,10 @@
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>org.jfree.svg</artifactId>
         </dependency>
 
         <dependency>

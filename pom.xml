@@ -21,8 +21,6 @@
 
     <modules>
         <module>byblos-core</module>
-        <module>byblos-chart</module>
-        <module>byblos-eval</module>
         <module>byblos-standalone</module>
         <module>byblos-webapi</module>
     </modules>
@@ -67,16 +65,6 @@
             <dependency>
                 <groupId>dev.byblos</groupId>
                 <artifactId>byblos-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dev.byblos</groupId>
-                <artifactId>byblos-chart</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>dev.byblos</groupId>
-                <artifactId>byblos-eval</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
