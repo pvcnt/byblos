@@ -5,12 +5,16 @@ Additional configuration files may be passed as arguments to Byblos when startin
 
 This page details the most relevant configuration parameters that an administrator may find useful to override.
 
-## Prometheus backend
+## Time series backend
 
-| Key                         | Type | Description                   | Default                                     |
-|-----------------------------|------|-------------------------------|---------------------------------------------|
-| `byblos.eval.backend.class` | string | Backend implementation to use | `dev.byblos.eval.backend.PrometheusBackend` |
-| `byblos.eval.backend.endpoint` | string | Prometheus instance to use    | `https://demo.promlabs.com`                 |
+| Key                            | Type | Description                                              | Default                                     |
+|--------------------------------|------|----------------------------------------------------------|---------------------------------------------|
+| `byblos.eval.backend.class`    | string | Backend implementation to use                            | `dev.byblos.eval.backend.PrometheusBackend` |
+| `byblos.eval.backend.endpoint` | string | Prometheus instance to use                               | `https://demo.promlabs.com`                 |
+| `byblos.eval.backend.auth`     | string | Authentication scheme to use (`basic`, `bearer`, `none`) | `none`                                      |
+| `byblos.eval.backend.username` | string | Username for `basic` authentication scheme               | -                                           |
+| `byblos.eval.backend.password` | string | Password for `basic` authentication scheme              | -                                           |
+| `byblos.eval.backend.token`    | string | Token for `bearer` authentication scheme                 | -                                           |
 
 ## Graph rendering
 

@@ -5,7 +5,7 @@ import com.netflix.iep.service.ClassFactory;
 import com.netflix.iep.service.DefaultClassFactory;
 import com.typesafe.config.Config;
 import dev.byblos.eval.backend.Backend;
-import dev.byblos.eval.backend.BackendSupplier;
+import dev.byblos.eval.backend.BackendFactory;
 import dev.byblos.eval.graph.DefaultSettings;
 import dev.byblos.eval.graph.GraphConfigFactory;
 import dev.byblos.eval.graph.Grapher;
@@ -46,13 +46,13 @@ public class ApiConfiguration {
     }
 
     @Bean
-    BackendSupplier backendSupplier(Config config, ClassFactory classFactory) {
-        return new BackendSupplier(config.getConfig("byblos.eval.backend"), classFactory);
+    BackendFactory backendFactory(Config config, ClassFactory classFactory) {
+        return new BackendFactory(config.getConfig("byblos.eval.backend"), classFactory);
     }
 
     @Bean
-    Backend backend(BackendSupplier backendSupplier) {
-        return backendSupplier.get();
+    Backend backend(BackendFactory backendFactory) {
+        return backendFactory.newInstance();
     }
 
     @Bean

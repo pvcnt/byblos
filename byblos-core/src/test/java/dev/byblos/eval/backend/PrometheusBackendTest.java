@@ -12,7 +12,7 @@ public class PrometheusBackendTest {
 
     @Test
     void query() throws Exception {
-        var config = ConfigFactory.parseMap(Map.of("endpoint", "https://demo.promlabs.com"));
+        var config = ConfigFactory.parseMap(Map.of("endpoint", "https://demo.promlabs.com", "auth", "none"));
         var backend = new PrometheusBackend(config);
         var end = Instant.now();
         var context = new EvalContext(end.minusSeconds(60 * 5).toEpochMilli(), end.toEpochMilli(), 60 * 1000);

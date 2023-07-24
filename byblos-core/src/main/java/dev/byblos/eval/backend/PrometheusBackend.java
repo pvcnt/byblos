@@ -25,12 +25,16 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 public final class PrometheusBackend implements Backend {
+    private final Config config;
     private final String baseUrl;
     private final HttpClient client;
     private final ObjectMapper objectMapper;
@@ -38,9 +42,10 @@ public final class PrometheusBackend implements Backend {
     private static final String NAME_TAG = "__name__";
 
     public PrometheusBackend(Config config) {
+        this.config = requireNonNull(config);
         baseUrl = config.getString("endpoint");
-        client = createHttpClient();
-        objectMapper = createObjectMapper();
+        client = newHttpClient();
+        objectMapper = newObjectMapper();
         LOGGER.info("Connected to {}", baseUrl);
     }
 
@@ -52,9 +57,7 @@ public final class PrometheusBackend implements Backend {
     }
 
     private List<Result> query(EvalContext context, String query) throws IOException {
-        var request = HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl + "/api/v1/query_range?start=" + (context.start() / 1000) + "&end=" + (context.end() / 1000) + "&step=" + (context.step() / 1000) + "&query=" + urlEncode(query)))
-                .timeout(Duration.ofMinutes(2))
+        var request = newHttpRequest("/api/v1/query_range?start=" + (context.start() / 1000) + "&end=" + (context.end() / 1000) + "&step=" + (context.step() / 1000) + "&query=" + urlEncode(query))
                 .header("Content-Type", "application/json")
                 .build();
         try {
@@ -93,13 +96,42 @@ public final class PrometheusBackend implements Backend {
         }
     }
 
-    private static HttpClient createHttpClient() {
+    private HttpRequest.Builder newHttpRequest(String path) {
+        var builder = HttpRequest.newBuilder()
+                .uri(URI.create(config.getString("endpoint") + path))
+                .timeout(Duration.ofMinutes(2));
+        var auth = config.getString("auth");
+        if ("basic".equals(auth)) {
+            applyBasicAuth(builder);
+        } else if ("bearer".equals(auth)) {
+            applyBearerAuth(builder);
+        }
+        return builder;
+    }
+
+    private void applyBasicAuth(HttpRequest.Builder builder) {
+        var username = config.getString("username");
+        var password = config.getString("password");
+        builder.header("Authorization", getBasicAuthenticationHeader(username, password));
+    }
+
+    private static String getBasicAuthenticationHeader(String username, String password) {
+        String value = username + ":" + password;
+        return "Basic " + Base64.getEncoder().encodeToString(value.getBytes());
+    }
+
+    private void applyBearerAuth(HttpRequest.Builder builder) {
+        var token = config.getString("token");
+        builder.header("Authorization", "Bearer " + token);
+    }
+
+    private static HttpClient newHttpClient() {
         return HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(5))
                 .build();
     }
 
-    private static ObjectMapper createObjectMapper() {
+    private static ObjectMapper newObjectMapper() {
         var objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return objectMapper;
