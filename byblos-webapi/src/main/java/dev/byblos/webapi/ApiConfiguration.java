@@ -4,8 +4,8 @@ import com.netflix.iep.config.ConfigManager;
 import com.netflix.iep.service.ClassFactory;
 import com.netflix.iep.service.DefaultClassFactory;
 import com.typesafe.config.Config;
-import dev.byblos.eval.db.Database;
-import dev.byblos.eval.db.DatabaseSupplier;
+import dev.byblos.eval.backend.Backend;
+import dev.byblos.eval.backend.BackendSupplier;
 import dev.byblos.eval.graph.DefaultSettings;
 import dev.byblos.eval.graph.GraphConfigFactory;
 import dev.byblos.eval.graph.Grapher;
@@ -46,17 +46,17 @@ public class ApiConfiguration {
     }
 
     @Bean
-    DatabaseSupplier databaseSupplier(Config config, ClassFactory classFactory) {
-        return new DatabaseSupplier(config.getConfig("byblos.eval.db"), classFactory);
+    BackendSupplier backendSupplier(Config config, ClassFactory classFactory) {
+        return new BackendSupplier(config.getConfig("byblos.eval.backend"), classFactory);
     }
 
     @Bean
-    Database database(DatabaseSupplier databaseSupplier) {
-        return databaseSupplier.get();
+    Backend backend(BackendSupplier backendSupplier) {
+        return backendSupplier.get();
     }
 
     @Bean
-    Grapher grapher(DefaultSettings settings, Database database) {
-        return new Grapher(settings, database);
+    Grapher grapher(DefaultSettings settings, Backend backend) {
+        return new Grapher(settings, backend);
     }
 }

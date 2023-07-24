@@ -7,10 +7,10 @@ This page details the most relevant configuration parameters that an administrat
 
 ## Prometheus backend
 
-| Key | Type | Description | Default |
-|-----|------|-------------|---------|
-| `byblos.eval.db.class` | string | Database implementation to use | `dev.byblos.eval.db.PrometheusDatabase` |
-| `byblos.eval.db.endpoint` | string | Prometheus instance to use | `https://demo.promlabs.com` |
+| Key                         | Type | Description                   | Default                                     |
+|-----------------------------|------|-------------------------------|---------------------------------------------|
+| `byblos.eval.backend.class` | string | Backend implementation to use | `dev.byblos.eval.backend.PrometheusBackend` |
+| `byblos.eval.backend.endpoint` | string | Prometheus instance to use    | `https://demo.promlabs.com`                 |
 
 ## Graph rendering
 

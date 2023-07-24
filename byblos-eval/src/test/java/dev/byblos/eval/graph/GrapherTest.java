@@ -1,7 +1,7 @@
 package dev.byblos.eval.graph;
 
 import com.typesafe.config.ConfigFactory;
-import dev.byblos.eval.db.Database;
+import dev.byblos.eval.backend.Backend;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +19,8 @@ public class GrapherTest {
     @BeforeEach
     void setUp() {
         defaultSettings = DefaultSettings.fromConfig(ConfigFactory.load());
-        Database database = (context, expr) -> List.of();
-        grapher = new Grapher(defaultSettings, database);
+        Backend backend = (context, expr) -> List.of();
+        grapher = new Grapher(defaultSettings, backend);
     }
 
     @Test

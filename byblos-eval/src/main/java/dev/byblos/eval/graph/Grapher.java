@@ -9,7 +9,7 @@ import dev.byblos.chart.graphics.Dimensions;
 import dev.byblos.chart.model.*;
 import dev.byblos.chart.util.Throwables;
 import dev.byblos.core.model.*;
-import dev.byblos.eval.db.Database;
+import dev.byblos.eval.backend.Backend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,12 +27,12 @@ import static java.util.Objects.requireNonNull;
 
 public final class Grapher {
     private final DefaultSettings settings;
-    private final Database database;
+    private final Backend backend;
     private static final Logger LOGGER = LoggerFactory.getLogger(Grapher.class);
 
-    public Grapher(DefaultSettings settings, Database database) {
+    public Grapher(DefaultSettings settings, Backend backend) {
         this.settings = requireNonNull(settings);
-        this.database = requireNonNull(database);
+        this.backend = requireNonNull(backend);
     }
 
     /**
@@ -51,7 +51,7 @@ public final class Grapher {
             var result = ImmutableListMultimap.<DataExpr, TimeSeries>builder();
             var stopWatch = Stopwatch.createStarted();
             for (var expr : dataExprs) {
-                result.putAll(expr, database.execute(config.evalContext(), expr));
+                result.putAll(expr, backend.query(config.evalContext(), expr));
             }
             stopWatch.stop();
             return evalAndRender(config, stopWatch.elapsed(), result.build());

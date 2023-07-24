@@ -1,4 +1,4 @@
-package dev.byblos.eval.db;
+package dev.byblos.eval.backend;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParser;
@@ -27,14 +27,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class PrometheusDatabase implements Database {
+public final class PrometheusBackend implements Backend {
     private final String baseUrl;
     private final HttpClient client;
     private final ObjectMapper objectMapper;
-    private static final Logger LOGGER = LoggerFactory.getLogger(PrometheusDatabase.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PrometheusBackend.class);
     private static final String NAME_TAG = "__name__";
 
-    public PrometheusDatabase(Config config) {
+    public PrometheusBackend(Config config) {
         baseUrl = config.getString("endpoint");
         client = createHttpClient();
         objectMapper = createObjectMapper();
@@ -42,7 +42,7 @@ public final class PrometheusDatabase implements Database {
     }
 
     @Override
-    public List<TimeSeries> execute(EvalContext context, DataExpr expr) throws IOException {
+    public List<TimeSeries> query(EvalContext context, DataExpr expr) throws IOException {
         return query(context, expr.exprString()).stream()
                 .map(result -> toTimeSeries(context, result))
                 .collect(Collectors.toList());
